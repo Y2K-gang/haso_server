@@ -1,0 +1,27 @@
+
+server:
+  port: 8080 # 원하는 포트 번호로 변경
+spring:
+  datasource:
+#    url: jdbc:mysql://localhost:3306/haso?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/haso?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password:
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+#
+#application:
+#  jwt:
+#    secretKey: 6233e7f41650d2e7f7234e032da895f26db86ee35379b42e729aee2718cf404e
+#    expiration: 86400000    # 24시간
+#    refreshExpiration: 604800000   # 7일
