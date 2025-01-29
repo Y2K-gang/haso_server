@@ -1,10 +1,7 @@
-package org.example.haso.domain.business.entity;
+package org.example.haso.domain.business.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.haso.domain.business.dto.BusinessRequest;
-import org.example.haso.domain.business.dto.TransactionRequest;
-import org.example.haso.domain.business.dto.TransactionResponse;
 
 import java.util.Date;
 

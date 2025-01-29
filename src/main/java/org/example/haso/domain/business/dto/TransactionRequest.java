@@ -1,7 +1,6 @@
 package org.example.haso.domain.business.dto;
 
 import lombok.*;
-import org.example.haso.domain.business.entity.Business;
 
 import java.util.Date;
 

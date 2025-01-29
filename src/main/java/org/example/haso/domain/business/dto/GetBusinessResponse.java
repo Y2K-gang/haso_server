@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.haso.domain.business.entity.Business;
+import org.example.haso.domain.business.model.Business;
 
 @Getter
 @Setter
