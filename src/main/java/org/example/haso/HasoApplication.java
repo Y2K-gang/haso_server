@@ -10,4 +10,5 @@ public class HasoApplication {
         SpringApplication.run(HasoApplication.class, args);
     }
 
+
 }

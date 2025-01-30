@@ -16,7 +16,7 @@ public class BusinessController {
     @Autowired
     private BusinessService businessService;
 
-    // 거래처 생성 (POST /business)
+    // 거래처 생성(검색) (POST /business/findUser)
     @PostMapping
     public ResponseEntity<BusinessResponse> createBusiness(@RequestBody BusinessRequest businessRequest) {
         BusinessResponse response = businessService.createBusiness(businessRequest);
@@ -46,8 +46,8 @@ public class BusinessController {
 
     // 거래 내역 생성 (POST /business/{userId}/transactions)
     @PostMapping("/{userId}/transactions")
-    public ResponseEntity<TransactionResponse> createTransaction(@PathVariable Long userId, @RequestBody TransactionRequest transactionRequest) {
-        TransactionResponse response = businessService.createTransaction(userId, transactionRequest);
+    public ResponseEntity<TransactionResponse> createTransaction(@PathVariable Long userId, @RequestBody StatementRequest statementRequest) {
+        TransactionResponse response = businessService.createTransaction(userId, statementRequest);
         return ResponseEntity.status(201).body(response);
     }
 

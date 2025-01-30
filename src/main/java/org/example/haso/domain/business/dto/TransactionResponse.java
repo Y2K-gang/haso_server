@@ -10,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class TransactionResponse {
-    private Long txnId;
-    private String content;
-    private Date date;
+    private Long txnId; // 거래 내역 id
+    private String item_name; // 품목명
+    private Date date; // 거래 날짜
 }
