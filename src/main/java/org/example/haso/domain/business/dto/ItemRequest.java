@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ItemResponse {
+public class ItemRequest {
 
     private String itemName; // 품목명
     private String unit; // 단위 (규격)
@@ -17,7 +17,4 @@ public class ItemResponse {
     private int vatAmount; // 부가세액
     private int out_amt;	// 미수금
     private String dep_acc;	// 입금계좌
-
-    //수량, 공급가액, 부가세액, 합계, 인수
-
 }
