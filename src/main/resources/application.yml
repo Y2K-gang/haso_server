@@ -1,11 +1,15 @@
-#server:
-#  port: 8080
+server:
+  port: 8345
 spring:
   datasource:
-    url: ${DB_URL}
+    url: jdbc:mariadb://svc.sel4.cloudtype.app:31245/Haso
     driver-class-name: org.mariadb.jdbc.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: root
+    password: 1234
+
+    jackson:
+      property-naming-strategy: SNAKE_CASE
+
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
@@ -21,3 +25,13 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
     com.zaxxer.hikari: DEBUG
+    org.springframework: DEBUG
+    org.springframework.validation: DEBUG
+    org.springframework.web: DEBUG
+    org.example: DEBUG
+
+
+jwt:
+  secretKey: xW8@!v1kA5#L3mD9rQ7vZ*JzT2uF6gR!0pHqY3wD#Ls@8&Nx0V9jS$K
+  accessExpire: 3600000
+  refreshExpire: 86400000
