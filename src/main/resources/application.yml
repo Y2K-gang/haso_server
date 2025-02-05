@@ -36,6 +36,7 @@ logging:
 
 
 jwt:
+  secretKey: ${JWT_SECRET}
   accessExpire: 3600000
   refreshExpire: 86400000
   expiration: 86400000
