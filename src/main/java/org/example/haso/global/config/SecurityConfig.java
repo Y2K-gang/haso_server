@@ -32,7 +32,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // CSRF 보호 해제
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh").permitAll()
+                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터 추가
