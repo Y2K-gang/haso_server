@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 import io.jsonwebtoken.security.Keys;
 
@@ -25,10 +26,15 @@ public class JwtUtils {
 
     @PostConstruct
     public void init() {
+        String secretKey = properties.secretKey();
+        System.out.println("JWT Secret Key: " + secretKey);
         // HS256 알고리즘에 사용된 서명 키의 크기가 너무 작음-> 403에러 -> 자동으로 적절한 크기의 비밀 키 생성
 //        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-        byte[] keyBytes = properties.secretKey().getBytes(StandardCharsets.UTF_8);
+//        byte[] keyBytes = properties.secretKey().getBytes(StandardCharsets.UTF_8);
+//        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+
+        byte[] keyBytes = Base64.getDecoder().decode(properties.secretKey());
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -43,7 +49,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .claim("userId", member.getUserId())
                 .issuedAt(new Date())
-                .setExpiration(new Date(now + expiration))
+                .expiration(new Date(now + expiration))  // 만료 시간
                 .signWith(secretKey, Jwts.SIG.HS256)
                 .compact();
     }
@@ -61,8 +67,20 @@ public class JwtUtils {
     }
 
     public Claims parse(String token) {
+
+        String cleanToken = token.replace("Bearer ", "");
+//
+//        // 디버깅용 로그
+//        System.out.println("Parsing token: " + cleanToken);
+//        System.out.println("JWT Secret Key: " + properties.secretKey()); // secretKey 출력
+
         try {
-            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token.replace("Bearer ", ""))
+                    .getPayload();
+//            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException e) {
             throw JwtException.EXPIRED.getException();
         } catch (SignatureException e) {
