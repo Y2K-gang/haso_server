@@ -2,10 +2,10 @@ server:
   port: 8345
 spring:
   datasource:
-    url: jdbc:mariadb://svc.sel4.cloudtype.app:31245/Haso
+    url: ${DB_URL}
     driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: 1234
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
     jackson:
       property-naming-strategy: SNAKE_CASE
@@ -32,6 +32,6 @@ logging:
 
 
 jwt:
-  secretKey: xW8@!v1kA5#L3mD9rQ7vZ*JzT2uF6gR!0pHqY3wD#Ls@8&Nx0V9jS$K
+  secretKey: ${JWT_SECRET}
   accessExpire: 3600000
   refreshExpire: 86400000
