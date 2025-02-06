@@ -1,18 +1,23 @@
 server:
   port: 8345
+
 spring:
-  security:
-    user:
-      name: admin
-      password: admin1234!
   datasource:
-    url: jdbc:mariadb://svc.sel4.cloudtype.app:31245/Haso
+    url: ${DB_URL}
     driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: 1234
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
     jackson:
       property-naming-strategy: SNAKE_CASE
+
+  security:
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "GET, POST, PUT, DELETE"
+      allowed-headers: "*"
+      exposed-headers: "Authorization"
+      max-age: 3600
 
 
   jpa:
@@ -39,13 +44,28 @@ jwt:
   accessExpire: 3600000
   refreshExpire: 86400000
   expiration: 86400000
-  secret-key: vObSBDYqvJfXJ3xOCMwDqNCe/UzQ5Xt1C5v2a3Tq5cM=
+  secret-key: ${JWT_SECRET}
 
 
 
 file:
-  dir: /Users/dgsw8th57/Desktop/store
+  dir: s3://haso-bucket/store
 
 api:
-  serviceKey: "9En4mQjBmqmTfpGrjISU5Il7TDZOFpCfw543RYFR6/egec191fhfSFyWYfCoGks/mGN3csv63C8b4caRXJdLog=="
+  serviceKey: ${OPENAI_API_KEY}
   url: "https://api.odcloud.kr/api/nts-businessman/v1/validate"
+
+
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    s3:
+      bucketName: haso-bucket
+      region:
+        staticRegion: ap-northeast-2
+      stack:
+        auto: false
+

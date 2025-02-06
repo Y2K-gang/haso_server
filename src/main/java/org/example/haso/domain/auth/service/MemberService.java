@@ -13,9 +13,6 @@ import org.example.haso.global.auth.TokenInfo;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 public class MemberService {
