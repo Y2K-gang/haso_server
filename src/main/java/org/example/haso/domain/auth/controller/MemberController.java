@@ -8,10 +8,9 @@ import org.example.haso.domain.auth.dto.SignupMemberRequest;
 import org.example.haso.domain.auth.service.MemberService;
 import org.example.haso.global.BaseResponse;
 import org.example.haso.global.auth.TokenInfo;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
