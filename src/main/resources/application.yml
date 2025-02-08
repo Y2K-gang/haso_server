@@ -44,7 +44,6 @@ jwt:
   accessExpire: 3600000
   refreshExpire: 86400000
   expiration: 86400000
-  secret-key: ${JWT_SECRET}
 
 
 
@@ -52,7 +51,7 @@ file:
   dir: s3://haso-bucket/store
 
 api:
-  serviceKey: ${OPENAI_API_KEY}
+  serviceKey: ${OPEN_API_KEY}
   url: "https://api.odcloud.kr/api/nts-businessman/v1/validate"
 
 
