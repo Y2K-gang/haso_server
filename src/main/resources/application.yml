@@ -1,3 +1,5 @@
+
+
 server:
   port: 8345
 
@@ -44,6 +46,7 @@ jwt:
   accessExpire: 3600000
   refreshExpire: 86400000
   expiration: 86400000
+  secret-key: ${JWT_SECRET}
 
 
 
@@ -67,4 +70,5 @@ cloud:
         staticRegion: ap-northeast-2
       stack:
         auto: false
+
 
