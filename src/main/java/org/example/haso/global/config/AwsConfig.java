@@ -1,5 +1,6 @@
 package org.example.haso.global.config;
 
+import lombok.Getter;
 import org.example.haso.domain.s3.AwsProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(AwsProperties.class)
+@Getter
 public class AwsConfig {
 
     @Value("${cloud.aws.credentials.access-key}")
@@ -23,25 +25,5 @@ public class AwsConfig {
 
     @Value("${cloud.aws.s3.stack.auto}")
     private boolean stackAuto;
-
-    // Getter Methods
-    public String getAccessKey() {
-        return accessKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public String getBucketName() {
-        return bucketName;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public boolean isStackAuto() {
-        return stackAuto;
-    }
 }
+
