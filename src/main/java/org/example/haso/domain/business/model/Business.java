@@ -3,9 +3,7 @@ package org.example.haso.domain.business.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.haso.domain.business.dto.BusinessRequest;
-
-import java.util.List;
+import org.example.haso.domain.business.dto.business.BusinessRequest;
 
 
 @Entity
@@ -18,7 +16,7 @@ public class Business {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId; // 거래처 id
+    private String userId; // 거래처 id
 
     private String business_no; // 사업자 등록 번호
 
@@ -31,7 +29,11 @@ public class Business {
 //    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private List<Statement> statements; // 거래 내역 리스트
 
-    public Business(BusinessRequest businessRequest) {
-        this.userId = businessRequest.getUserId();
+    public Business(BusinessRequest request) {
+        this.userId = request.getUserId();
+        this.business_no = getBusiness_no();
+        this.business_address = getBusiness_address();
+
+
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/business")
-public class BusinessController {
+public class TransactionController {
 
     @Autowired
     private BusinessService businessService;
@@ -30,33 +30,23 @@ public class BusinessController {
     private StatementService statementService;
     private TransactionService transactionService;
 
-    // 거래처 검색 (GET /business/search)
-    @GetMapping("/search")
-    public ResponseEntity<BusinessResponse> search(
-            @GetAuthenticatedUser MemberEntity member,
-            @RequestParam BusinessRequest request) {
-        BusinessResponse response = businessService.search(member, request);
-        return ResponseEntity.ok(response);
 
-    }
-
-    // 거래처 생성 (POST /business)
-    // 취급물품 가져오는 거 수정
-    @PostMapping
-    public ResponseEntity<GetBusinessResponse> createBusiness(
-            @GetAuthenticatedUser MemberEntity member,
-            @RequestBody BusinessRequest request) {
-        GetBusinessResponse response = businessService.createBusiness(member, request);
-        return ResponseEntity.status(201).body(response);
-    }
-
-    // 거래처 삭제 (DELETE /business/{userId})
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteBusiness(
+    // 공급자용 전체 조회 (GET /business/supply/{userId})
+    @GetMapping("/supply/{userId}")
+    public ResponseEntity<List<TransactionResponse>> getAllSupplyBusiness(
             @GetAuthenticatedUser MemberEntity member,
             @PathVariable String userId) {
-        String deleteId = businessService.deleteBusiness(member, userId);
-        return ResponseEntity.ok(deleteId);
+        List<TransactionResponse> responses = transactionService.getAllSupplyBusiness(member, userId);
+        return ResponseEntity.ok(responses);
+    }
+
+    // 수요자용 전체 조회 (GET /business/demand/{userId})
+    @GetMapping("/demand/{userId}")
+    public ResponseEntity<List<TransactionResponse>> getAllDemandBusiness(
+            @GetAuthenticatedUser MemberEntity member,
+            @PathVariable String userId) {
+        List<TransactionResponse> responses = transactionService.getAllDemandBusiness(member, userId);
+        return ResponseEntity.ok(responses);
     }
 
 }

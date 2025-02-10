@@ -1,4 +1,4 @@
-package org.example.haso.domain.business.dto;
+package org.example.haso.domain.business.dto.item;
 
 import lombok.*;
 
@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class ItemResponse {
 
+    private int itemId;
     private String itemName; // 품목명
     private String unit; // 단위 (규격)
     private int quantity; // 수량
