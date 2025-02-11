@@ -1,4 +1,4 @@
-package org.example.haso.domain.business.dto;
+package org.example.haso.domain.business.dto.item;
 
 import lombok.*;
 

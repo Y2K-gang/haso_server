@@ -13,7 +13,7 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
+    private int itemId;
 
     private String itemName; // 품목명
     private String unit; // 단위 (규격)
@@ -24,8 +24,7 @@ public class Item {
     private int outAmt; // 미수금 (outstanding amount)
     private String depAcc; // 입금 계좌 (deposit account)
 
-    @OneToOne
-//    @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "txnId", nullable = false)
     private Statement statement; // 거래 내역과의 관계
 }

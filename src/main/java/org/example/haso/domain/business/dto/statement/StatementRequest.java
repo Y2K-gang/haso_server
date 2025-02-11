@@ -1,9 +1,9 @@
-package org.example.haso.domain.business.dto;
+package org.example.haso.domain.business.dto.statement;
 
 import lombok.*;
+import org.example.haso.domain.business.dto.item.ItemRequest;
+
 import java.util.Date;
-
-
 import java.util.List;
 
 @Getter
@@ -17,6 +17,6 @@ public class StatementRequest {
     private String businessAddress; // 사업장 주소
     private String faxNumber; // 팩스 번호
     private String tradeName; // 상호
-    private ItemRequest items; // 품목 정보 리스트
+    private List<ItemRequest> items; // 품목 정보 리스트
 
 }

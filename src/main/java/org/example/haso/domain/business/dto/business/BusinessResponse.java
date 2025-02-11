@@ -1,4 +1,4 @@
-package org.example.haso.domain.business.dto;
+package org.example.haso.domain.business.dto.business;
 
 import lombok.*;
 import org.example.haso.domain.business.model.Business;
@@ -10,7 +10,7 @@ import org.example.haso.domain.business.model.Business;
 @Builder
 public class BusinessResponse {
 
-    private Long userId; // 거래처 id
+    private String  userId; // 거래처 id
     private String business_no; // 사업자 등록 번호
     private String business_address; // 사업장 주소
     private String fax_number; // 팩스 번호
