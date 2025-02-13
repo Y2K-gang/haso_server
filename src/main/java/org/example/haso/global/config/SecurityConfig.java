@@ -48,7 +48,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8345"));
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8345", "https://port-0-haso-server-m70dmespb703c228.sel4.cloudtype.app"));
         corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "OPTIONS"));
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
