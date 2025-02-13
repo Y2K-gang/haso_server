@@ -12,7 +12,7 @@ import org.example.haso.domain.business.model.Business;
 @AllArgsConstructor
 public class GetBusinessResponse {
 
-    private Long userId; // 거래처 id
+    private String userId; // 거래처 id
 
     public static GetBusinessResponse from(Business business) {
         return GetBusinessResponse.builder()

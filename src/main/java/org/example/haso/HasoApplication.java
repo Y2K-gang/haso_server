@@ -7,10 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 
-//@SpringBootApplication
+@SpringBootApplication
 @ConfigurationPropertiesScan
-@ComponentScan(basePackages = "org.example.haso.global.config")
-@SpringBootApplication(scanBasePackages = "org.example.haso")
+//@ComponentScan(basePackages = "org.example.haso.domain")
+//@SpringBootApplication(scanBasePackages = "org.example.haso")
 public class HasoApplication {
     public static void main(String[] args) {
         SpringApplication.run(HasoApplication.class, args);

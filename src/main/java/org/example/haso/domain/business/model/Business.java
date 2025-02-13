@@ -15,7 +15,6 @@ import org.example.haso.domain.business.dto.business.BusinessRequest;
 public class Business {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String userId; // 거래처 id
 
     private String business_no; // 사업자 등록 번호
@@ -31,9 +30,8 @@ public class Business {
 
     public Business(BusinessRequest request) {
         this.userId = request.getUserId();
-        this.business_no = getBusiness_no();
-        this.business_address = getBusiness_address();
-
+        this.business_no = business_no;
+        this.business_address = business_address;
 
     }
 }

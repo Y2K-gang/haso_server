@@ -16,9 +16,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.List;
+import java.util.Arrays;
+
 
 @Configuration
-@ComponentScan(basePackages = "org.example.haso.global.auth") // 해당 패키지를 명시적으로 추가
+@ComponentScan(basePackages = "org.example.haso.global.auth")
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -29,45 +31,42 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // CSRF 보호 해제
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()  // 나머지 경로는 인증 필요
                 )
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터 추가
+
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
 
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())  // CSRF 보호 해제
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate")
-//                        .permitAll()  // 인증 없이 접근 가능한 URL
-//                        .anyRequest().authenticated()  // 그 외의 요청은 인증 필요
-//                )
-//                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터 추가
-//                .addFilterBefore(exceptFilter, JwtAuthenticationFilter.class);  // JWT 예외 필터 추가
-//
-//        return http.build();  // 필터 체인 반환
-//    }
-
-
     // CORS 설정
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(List.of("http://localhost:8345"));  // 클라이언트 URL
-        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8345"));
+        corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "OPTIONS"));
+        corsConfig.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
         return source;
     }
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration corsConfig = new CorsConfiguration();
+//        corsConfig.setAllowedOrigins(List.of("http://localhost:8345", "https://port-0-haso-server-m70dmespb703c228.sel4.cloudtype.app"));
+//        corsConfig.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+//        corsConfig.setAllowedHeaders(List.of("*"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", corsConfig);
+//        return source;
+//    }
+
 
     // PasswordEncoder 빈 등록
     @Bean
