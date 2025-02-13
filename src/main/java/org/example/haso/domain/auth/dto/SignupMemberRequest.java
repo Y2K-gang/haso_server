@@ -1,5 +1,6 @@
 package org.example.haso.domain.auth.dto;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 
 public record SignupMemberRequest (
@@ -31,6 +32,8 @@ public record SignupMemberRequest (
         @NotBlank
         String businessNo
 ) {
+
+        @AssertTrue(message = "Passwords do not match")
         public boolean isPasswordMatch() {
                 return this.password.equals(this.confirmPassword);
         }

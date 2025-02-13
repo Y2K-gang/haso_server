@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 public class BusinessRequest {
 
-    private Long userId; // 거래처 id
+    private String userId; // 거래처 id
 }
