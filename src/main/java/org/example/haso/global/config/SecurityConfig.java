@@ -32,17 +32,36 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter authFilter;
     private final JwtExceptionFilter exceptFilter;
 
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+////                .csrf(csrf -> csrf.disable())
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate").permitAll()
+//                        .anyRequest().authenticated()  // 나머지 경로는 인증 필요
+//                )
+//
+//                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(exceptFilter, JwtAuthenticationFilter.class);
+//
+//        return http.build();
+//    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-//                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate").permitAll()
                         .anyRequest().authenticated()  // 나머지 경로는 인증 필요
                 )
-
+                // HTTPS 강제 리디렉션 설정
+                .requiresChannel(channel -> channel
+                        .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") == null || !r.getHeader("X-Forwarded-Proto").equals("https"))
+                        .requiresSecure()) // 요청이 HTTP인 경우 HTTPS로 리디렉션
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptFilter, JwtAuthenticationFilter.class);
 
@@ -53,12 +72,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList(
-//                "http://localhost:8345",
-//                "https://port-0-haso-server-m70dmespb703c228.sel4.cloudtype.app"
-//        ));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:8345",
+                "https://port-0-haso-server-m70dmespb703c228.sel4.cloudtype.app"
+        ));
 //        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedOriginPatterns(List.of("*"));
+//        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("*")); // 모든 HTTP 메서드 허용
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true); // 인증 정보 포함 허용
