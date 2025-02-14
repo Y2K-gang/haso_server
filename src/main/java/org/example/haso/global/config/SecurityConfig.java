@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 
 @Configuration
-@ComponentScan(basePackages = "org.example.haso.global.auth")
+//@ComponentScan(basePackages = "org.example.haso.global.auth")
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
