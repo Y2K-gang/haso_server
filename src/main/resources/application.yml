@@ -1,7 +1,10 @@
-
-
 server:
   port: 8345
+  ssl:
+    key-store: classpath:keystore.jks
+    key-store-password: ${KEYSTORE_PASSWORD}
+    key-store-type: JKS
+    key-alias: selfsigned
 
 spring:
   datasource:
@@ -33,12 +36,11 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
-    com.zaxxer.hikari: DEBUG
-    org.springframework: DEBUG
-    org.springframework.validation: DEBUG
-    org.springframework.web: DEBUG
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql: INFO
+    com.zaxxer.hikari: INFO
+    org.springframework: WARN
+    org.springframework.web: WARN
     org.example: DEBUG
 
 
