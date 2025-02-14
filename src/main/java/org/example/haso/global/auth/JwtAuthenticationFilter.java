@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
+@Order(1)
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -26,17 +27,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-        logger.debug("shouldNotFilter 호출됨: 요청 URI = {}", path);
-        return path.startsWith("/member/signup") || path.startsWith("/member/signin") ||
-                path.startsWith("/member/refresh") || path.startsWith("/member/validate");
-    }
-
-
-
-    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        if (request.getRequestURI().startsWith("/member/signup")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String token = request.getHeader("Authorization");
 
