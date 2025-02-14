@@ -6,6 +6,7 @@ server:
     key-store-type: JKS
     key-alias: selfsigned
 
+
 spring:
   datasource:
     url: ${DB_URL}
@@ -42,6 +43,7 @@ logging:
     org.springframework: WARN
     org.springframework.web: WARN
     org.example: DEBUG
+
 
 
 jwt:
