@@ -1,7 +1,6 @@
 server:
   port: 8345
 
-
 spring:
   datasource:
     url: ${DB_URL}
@@ -32,13 +31,13 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: INFO
-    org.hibernate.type.descriptor.sql: INFO
-    com.zaxxer.hikari: INFO
-    org.springframework: WARN
-    org.springframework.web: WARN
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.zaxxer.hikari: DEBUG
+    org.springframework: DEBUG
+    org.springframework.validation: DEBUG
+    org.springframework.web: DEBUG
     org.example: DEBUG
-
 
 
 jwt:
@@ -69,7 +68,6 @@ cloud:
         staticRegion: ap-northeast-2
       stack:
         auto: false
-
 
 
 
