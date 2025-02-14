@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,39 +33,17 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter authFilter;
     private final JwtExceptionFilter exceptFilter;
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-////                .csrf(csrf -> csrf.disable())
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate").permitAll()
-//                        .anyRequest().authenticated()  // 나머지 경로는 인증 필요
-//                )
-//
-//                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(exceptFilter, JwtAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+//                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate")  // CSRF 비활성화할 엔드포인트 지정
-                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate").permitAll()
                         .anyRequest().authenticated()  // 나머지 경로는 인증 필요
                 )
-                // HTTP로 강제 리디렉션 설정
-                .requiresChannel(channel -> channel
-                        .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null && r.getHeader("X-Forwarded-Proto").equals("https"))
-                        .requiresInsecure()) // HTTPS 요청이 오면 HTTP로 리디렉션
+
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptFilter, JwtAuthenticationFilter.class);
 
