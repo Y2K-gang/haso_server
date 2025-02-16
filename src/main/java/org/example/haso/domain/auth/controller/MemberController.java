@@ -10,6 +10,7 @@ import org.example.haso.global.BaseResponse;
 import org.example.haso.global.auth.TokenInfo;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,26 +26,24 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-//    @PostMapping("/member/signup")
-    public BaseResponse<TokenInfo> createMember(@Valid @RequestBody SignupMemberRequest dto, BindingResult bindingResult) {
+    public ResponseEntity<BaseResponse<TokenInfo>> createMember(@Valid @RequestBody SignupMemberRequest dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            // 유효성 검사 오류가 있으면 오류 메시지를 반환
             String errorMessage = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.joining(", "));
-            return new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), errorMessage, null);
+            BaseResponse<TokenInfo> response = new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), errorMessage, null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-
-        return new BaseResponse<> (
+        BaseResponse<TokenInfo> response = new BaseResponse<>(
                 HttpStatus.OK.value(),
                 "회원가입을 완료하였습니다",
                 memberService.signupMember(dto)
         );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/signin")
-//    @PostMapping("/member/signin")
     public BaseResponse<TokenInfo> getMember(@RequestBody SigninMemberRequest dto) {
         return new BaseResponse<>(
                 HttpStatus.OK.value(),
@@ -54,7 +53,6 @@ public class MemberController {
     }
 
     @PostMapping("/refresh")
-//    @PostMapping("/member/refresh")
     public BaseResponse<String> refreshMember(@RequestBody RefreshMemberRequest dto) {
         return new BaseResponse<>(
                 HttpStatus.OK.value(),
