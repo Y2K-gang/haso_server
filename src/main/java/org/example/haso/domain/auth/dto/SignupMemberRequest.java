@@ -5,31 +5,31 @@ import jakarta.validation.constraints.NotBlank;
 
 public record SignupMemberRequest (
 
-        @NotBlank
+        @NotBlank(message = "userId는 공백일 수 없습니다")
         String userId,
 
-        @NotBlank
+        @NotBlank(message = "name는 공백일 수 없습니다")
         String name,
 
-        @NotBlank
+        @NotBlank(message = "password는 공백일 수 없습니다")
         String password,
 
-        @NotBlank
+        @NotBlank(message = "confirmPassword는 공백일 수 없습니다")
         String confirmPassword,
 
-        @NotBlank
+        @NotBlank(message = "tel는 공백일 수 없습니다")
         String tel,
 
-        @NotBlank
+        @NotBlank(message = "storeName는 공백일 수 없습니다")
         String storeName,
 
-        @NotBlank
+        @NotBlank(message = "storeNo는 공백일 수 없습니다")
         String storeNo,
 
-        @NotBlank
+        @NotBlank(message = "faxNo는 공백일 수 없습니다")
         String faxNo,
 
-        @NotBlank
+        @NotBlank(message = "businessNo는 공백일 수 없습니다")
         String businessNo
 ) {
 
