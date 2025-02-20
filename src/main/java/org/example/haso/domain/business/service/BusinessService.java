@@ -13,7 +13,9 @@ import org.example.haso.domain.business.repository.BusinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,4 +81,15 @@ public class BusinessService {
         return userId;
     }
 
+    @Transactional
+    public List<GetBusinessResponse> getBusiness(MemberEntity member) {
+
+        String user = member.getUserId();
+        List<Business> businesses = businessRepository.findAllByUser(user);
+
+        return businesses.stream()
+                .map(GetBusinessResponse::from)
+                .collect(Collectors.toList());
+
+    }
 }
