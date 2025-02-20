@@ -5,9 +5,6 @@ import org.example.haso.domain.auth.entity.MemberEntity;
 import org.example.haso.domain.business.dto.business.BusinessRequest;
 import org.example.haso.domain.business.dto.business.BusinessResponse;
 import org.example.haso.domain.business.dto.business.GetBusinessResponse;
-import org.example.haso.domain.business.dto.statement.StatementRequest;
-import org.example.haso.domain.business.dto.statement.StatementResponse;
-import org.example.haso.domain.business.dto.transaction.TransactionResponse;
 import org.example.haso.domain.business.service.BusinessService;
 import org.example.haso.domain.business.service.StatementService;
 import org.example.haso.domain.business.service.TransactionService;
@@ -15,8 +12,6 @@ import org.example.haso.global.auth.GetAuthenticatedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -34,7 +29,7 @@ public class BusinessController {
     @GetMapping("/search")
     public ResponseEntity<BusinessResponse> search(
             @GetAuthenticatedUser MemberEntity member,
-            @RequestParam BusinessRequest request) {
+            @RequestBody BusinessRequest request) {
         BusinessResponse response = businessService.search(member, request);
         return ResponseEntity.ok(response);
 

@@ -3,6 +3,7 @@ package org.example.haso.domain.auth.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.haso.domain.auth.MemberException;
+import org.example.haso.domain.auth.MemberType;
 import org.example.haso.domain.auth.dto.RefreshMemberRequest;
 import org.example.haso.domain.auth.dto.SigninMemberRequest;
 import org.example.haso.domain.auth.dto.SignupMemberRequest;
@@ -46,6 +47,7 @@ public class MemberService {
                 .storeNo(dto.storeNo())
                 .faxNo(dto.faxNo())
                 .businessNo(dto.businessNo())
+                .role(MemberType.ROLE_USER)
                 .build();
 
 

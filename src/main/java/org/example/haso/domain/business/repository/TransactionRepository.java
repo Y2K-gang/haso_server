@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
 
-    List<Transaction> findByUserIdAndBtype(String userId, BusinessType btype);
-
+    List<Transaction> findByUserAndUserIdAndBtype(String userId, String userId1, BusinessType businessType);
 }

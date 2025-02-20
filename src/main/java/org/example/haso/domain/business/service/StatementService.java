@@ -2,7 +2,11 @@ package org.example.haso.domain.business.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.haso.domain.auth.entity.MemberEntity;
+import org.example.haso.domain.auth.repository.MemberRepository;
+import org.example.haso.domain.business.dto.item.GetItemResponse;
 import org.example.haso.domain.business.dto.item.ItemResponse;
+import org.example.haso.domain.business.dto.statement.GetStatementResponse;
 import org.example.haso.domain.business.dto.statement.StatementRequest;
 import org.example.haso.domain.business.dto.statement.StatementResponse;
 import org.example.haso.domain.business.dto.transaction.TransactionResponse;
@@ -18,11 +22,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class StatementService {
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private BusinessRepository businessRepository;
@@ -53,13 +61,28 @@ public class StatementService {
 //    }
 
     @Transactional
-    public StatementResponse createSupplyTransaction(Long userId, StatementRequest statementRequest) {
-
+    public StatementResponse createTransaction(MemberEntity member, String userId, StatementRequest statementRequest, BusinessType btype) {
         // 거래처 찾기
-        Business business = businessRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Business not found"));
+        Business business = businessRepository.findByUserId(userId);
 
-        // Item 객체 생성 (StatementRequest의 items를 기반으로)
+        // Statement 객체 생성 및 저장
+        Statement statement = Statement.builder()
+                .user(member.getUserId())
+                .date(statementRequest.getDate())
+                .tel(statementRequest.getTel())
+                .faxNumber(statementRequest.getFaxNumber())
+                .businessNo(statementRequest.getBusinessNo())
+                .tradeName(statementRequest.getTradeName())
+                .businessAddress(statementRequest.getBusinessAddress())
+                .name(statementRequest.getName())
+                .business(business)
+                .btype(btype)
+                .build();
+
+        statement = statementRepository.save(statement);
+        statementRepository.flush();
+
+        // Item 객체 생성
         List<Item> items = statementRequest.getItems().stream()
                 .map(itemRequest -> Item.builder()
                         .itemName(itemRequest.getItemName())
@@ -68,141 +91,85 @@ public class StatementService {
                         .unitPrice(itemRequest.getUnitPrice())
                         .supplyPrice(itemRequest.getSupplyPrice())
                         .vatAmount(itemRequest.getVatAmount())
-                        .outAmt(itemRequest.getOut_amt())
-                        .depAcc(itemRequest.getDep_acc())
+                        .unit_auto(itemRequest.getUnit_auto())
+                        .quantity_auto(itemRequest.getQuantity_auto())
+                        .vat(itemRequest.getVat())
+                        .total(itemRequest.getTotal())
+                        .acquirerName(itemRequest.getAcquirerName())
+                        .out_amt(itemRequest.getOut_amt())
+                        .dep_acc(itemRequest.getDep_acc())
                         .build())
                 .collect(Collectors.toList());
 
-        // Statement 객체 생성
-        Statement statement = Statement.builder()
-                .date(statementRequest.getDate())
-                .business(business)
-                .btype(BusinessType.SUPPLY)  // BusinessType 설정 (공급 거래)
-                .build();
-
-        statement = statementRepository.save(statement);
-
-        // 품목들을 Statement와 연관
         for (Item item : items) {
-            item.setStatement(statement);  // items를 변경하지 않고 한 번만 사용
+            item.setStatement(statement);
         }
+
+        // 품목 리스트 저장
         itemRepository.saveAll(items);
 
         return new StatementResponse(
                 statement.getTxnId(),
-                statement.getBtype(), // 거래 유형 (공급 거래)
-                statement.getDate(),
-                business.getBusiness_address(), // 사업장 주소
-                business.getFax_number(), // 팩스 번호
-                business.getTrade_name(), // 상호
+                statement.getBtype(),
                 items.stream().map(item -> new ItemResponse(
-                        item.getItemId(),
-                        item.getItemName(),
-                        item.getUnit(),
-                        item.getQuantity(),
-                        item.getUnitPrice(),
-                        item.getSupplyPrice(),
-                        item.getVatAmount(),
-                        item.getOutAmt(),
-                        item.getDepAcc()
-                )).collect(Collectors.toList())  // 품목 리스트
+                        item.getItemId()
+                )).collect(Collectors.toList())
         );
     }
 
+
     @Transactional
-    public StatementResponse createDemandTransaction(Long userId, StatementRequest statementRequest) {
-
-        // 거래처 찾기
-        Business business = businessRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Business not found"));
-
-        // Item 객체 생성 (StatementRequest의 items를 기반으로)
-        List<Item> items = statementRequest.getItems().stream()
-                .map(itemRequest -> Item.builder()
-                        .itemName(itemRequest.getItemName())
-                        .unit(itemRequest.getUnit())
-                        .quantity(itemRequest.getQuantity())
-                        .unitPrice(itemRequest.getUnitPrice())
-                        .supplyPrice(itemRequest.getSupplyPrice())
-                        .vatAmount(itemRequest.getVatAmount())
-                        .outAmt(itemRequest.getOut_amt())
-                        .depAcc(itemRequest.getDep_acc())
-                        .build())
-                .collect(Collectors.toList());
-
-        // Statement 객체 생성
-        Statement statement = Statement.builder()
-                .date(statementRequest.getDate())
-                .business(business)
-                .btype(BusinessType.DEMAND)  // BusinessType 설정 (수요 거래)
-                .build();
-
-        statement = statementRepository.save(statement);
-
-        // 품목들을 Statement와 연관
-        for (Item item : items) {
-            item.setStatement(statement);  // items를 변경하지 않고 한 번만 사용
-        }
-        itemRepository.saveAll(items);
-
-        return new StatementResponse(
-                statement.getTxnId(),
-                statement.getBtype(), // 거래 유형 (수요 거래)
-                statement.getDate(),
-                business.getBusiness_address(), // 사업장 주소
-                business.getFax_number(), // 팩스 번호
-                business.getTrade_name(), // 상호
-                items.stream().map(item -> new ItemResponse(
-                        item.getItemId(),
-                        item.getItemName(),
-                        item.getUnit(),
-                        item.getQuantity(),
-                        item.getUnitPrice(),
-                        item.getSupplyPrice(),
-                        item.getVatAmount(),
-                        item.getOutAmt(),
-                        item.getDepAcc()
-                )).collect(Collectors.toList())  // 품목 리스트
-        );
+    public StatementResponse createSupplyTransaction(MemberEntity member, String userId, StatementRequest statementRequest) {
+        return createTransaction(member, userId, statementRequest, BusinessType.SUPPLY);
     }
 
     @Transactional
-    public StatementResponse getTransactionStatement(Long userId, Long txnId) {
-        // 거래 내역 찾기
-        Statement statement = statementRepository.findById(txnId)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+    public StatementResponse createDemandTransaction(MemberEntity member, String userId, StatementRequest statementRequest) {
 
-        // 거래 내역이 거래처에 속하는지 확인
-        if (!statement.getBusiness().getUserId().equals(userId)) {
-            throw new RuntimeException("Transaction does not belong to the specified business");
-        }
+        return createTransaction(member, userId, statementRequest, BusinessType.DEMAND);
+    }
 
-        // 거래처 찾기
+    @Transactional
+    public GetStatementResponse getTransactionStatement(MemberEntity member, String userId, int txnId) {
+//        Statement member_userId = Statement.fromMemberEntity(member);
+
+        String user = member.getUserId();  // 여기서 userId를 가져옵니다.
+        Statement statement = statementRepository.findByUserAndTxnId(user, txnId);
+
+//        // 거래처 찾기
         Business business = statement.getBusiness();
 
         // 품목 정보 조회
         List<Item> items = itemRepository.findByStatement(statement);
 
         // 품목 정보를 리스트로 변환
-        List<ItemResponse> itemResponses = items.stream()
-                .map(item -> ItemResponse.builder()
-                        .itemId(item.getItemId()) // Added itemId for completeness
+        List<GetItemResponse> itemResponses = items.stream()
+                .map(item -> GetItemResponse.builder()
+                        .itemId(item.getItemId())
                         .itemName(item.getItemName())
                         .unit(item.getUnit())
                         .quantity(item.getQuantity())
                         .unitPrice(item.getUnitPrice())
                         .supplyPrice(item.getSupplyPrice())
                         .vatAmount(item.getVatAmount())
-                        .out_amt(item.getOutAmt()) // Ensure it's mapped correctly
-                        .dep_acc(item.getDepAcc()) // Ensure it's mapped correctly
+                        .unit_auto(item.getUnit_auto())
+                        .quantity_auto(item.getQuantity_auto())
+                        .vat(item.getVat())
+                        .total(item.getTotal())
+                        .acquirerName(item.getAcquirerName())
+                        .out_amt(item.getOut_amt())
+                        .dep_acc(item.getDep_acc())
                         .build())
                 .collect(Collectors.toList());
 
-        return StatementResponse.builder()
+        return GetStatementResponse.builder()
                 .txnId(statement.getTxnId())
-                .btype(statement.getBtype())  // 거래유형을 statement에서 직접 가져옵니다.
+                .btype(statement.getBtype())
                 .date(statement.getDate())
-                .businessAddress(business.getBusiness_address())  // 사업장 주소
+                .name(statement.getName())
+                .tel(statement.getTel())
+                .businessNo(business.getBusiness_no())
+                .businessAddress(statement.getBusinessAddress())
                 .faxNumber(business.getFax_number())  // 팩스 번호
                 .tradeName(business.getTrade_name())  // 상호
                 .items(itemResponses)  // 품목 정보 (리스트)
@@ -214,20 +181,10 @@ public class StatementService {
 
     // 거래 내역 삭제
     @Transactional
-    public Long deleteTransaction(Long userId, Long txnId) {
+    public int deleteTransaction(MemberEntity member, String userId, int txnId) {
 
-//        // 거래처 찾기
-//        Business business = businessRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("Business not found"));
-
-        // 거래 내역 찾기
-        Statement statement = statementRepository.findById(txnId)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
-
-        // 거래 내역이 거래처에 속하는지
-        if (!statement.getBusiness().getUserId().equals(userId)) {
-            throw new RuntimeException("Transaction does not belong to the specified business");
-        }
+        String user = member.getUserId();  // 여기서 userId를 가져옵니다.
+        Statement statement = statementRepository.findByUserAndTxnId(user, txnId);
 
         statementRepository.delete(statement);
         return txnId;
