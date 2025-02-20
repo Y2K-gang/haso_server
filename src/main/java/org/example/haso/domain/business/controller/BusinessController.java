@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -54,4 +56,11 @@ public class BusinessController {
         return ResponseEntity.ok(deleteId);
     }
 
+    // 거래처 전체 조회 (GET /business)
+    @GetMapping
+    public ResponseEntity<List<GetBusinessResponse>> getBusiness(
+            @GetAuthenticatedUser MemberEntity member) {
+        List<GetBusinessResponse> responses = businessService.getBusiness(member);
+        return ResponseEntity.ok(responses);
+    }
 }

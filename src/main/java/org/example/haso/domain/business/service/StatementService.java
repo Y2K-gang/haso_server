@@ -41,25 +41,6 @@ public class StatementService {
     @Autowired
     private ItemRepository itemRepository;
 
-
-//    // 거래처 상세 조회 & 거래 내역 전체 조회
-//    @Transactional
-//    public List<TransactionResponse> getHistory(Long userId) {
-//        Business business = businessRepository.findById(userId).orElseThrow(() -> new RuntimeException("Business not found"));
-//
-//        // 거래 내역 찾기
-//        List<Statement> statements = statementRepository.findByBusiness(business);
-//
-//        // Statement -> TransactionResponse 변환
-//        return statements.stream()
-//                .map(statement -> new TransactionResponse(
-//                        statement.getTxnId(),
-//                        statement.getItem().getItemName(),
-//                        statement.getDate()))
-//                .toList();
-//
-//    }
-
     @Transactional
     public StatementResponse createTransaction(MemberEntity member, String userId, StatementRequest statementRequest, BusinessType btype) {
         // 거래처 찾기
@@ -80,7 +61,6 @@ public class StatementService {
                 .build();
 
         statement = statementRepository.save(statement);
-        statementRepository.flush();
 
         // Item 객체 생성
         List<Item> items = statementRequest.getItems().stream()

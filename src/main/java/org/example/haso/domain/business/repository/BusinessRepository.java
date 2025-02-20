@@ -15,6 +15,8 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
 
     Business findByUserId(String userId);
 
+    List<Business> findAllByUser(String user);
+
 //    Optional<Business> findByUserId(String userId);
 
 
