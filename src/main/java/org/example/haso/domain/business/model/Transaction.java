@@ -2,6 +2,7 @@ package org.example.haso.domain.business.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.haso.domain.auth.entity.MemberEntity;
 
 import java.util.Date;
 
@@ -13,6 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class Transaction {
+
+    private String user; // userId -> 유저별 데이터 구별 위함
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

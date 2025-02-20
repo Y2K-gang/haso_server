@@ -2,6 +2,7 @@ package org.example.haso.domain.business.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.haso.domain.auth.entity.MemberEntity;
+import org.example.haso.domain.business.dto.statement.GetStatementResponse;
 import org.example.haso.domain.business.dto.statement.StatementRequest;
 import org.example.haso.domain.business.dto.statement.StatementResponse;
 import org.example.haso.domain.business.dto.transaction.TransactionResponse;
@@ -24,7 +25,10 @@ public class StatementController {
     @Autowired
     private BusinessService businessService;
 
+    @Autowired
     private StatementService statementService;
+
+    @Autowired
     private TransactionService transactionService;
 
 //
@@ -41,9 +45,9 @@ public class StatementController {
     @PostMapping("/supply/{userId}")
     public ResponseEntity<StatementResponse> createSupplyTransaction(
             @GetAuthenticatedUser MemberEntity member,
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @RequestBody StatementRequest statementRequest) {
-        StatementResponse response = statementService.createSupplyTransaction(userId, statementRequest);
+        StatementResponse response = statementService.createSupplyTransaction(member, userId, statementRequest);
         return ResponseEntity.status(201).body(response);
     }
 
@@ -51,29 +55,29 @@ public class StatementController {
     @PostMapping("/demand/{userId}")
     public ResponseEntity<StatementResponse> createDemandTransaction(
             @GetAuthenticatedUser MemberEntity member,
-            @PathVariable Long userId,
+            @PathVariable String userId,
             @RequestBody StatementRequest statementRequest) {
-        StatementResponse response = statementService.createDemandTransaction(userId, statementRequest);
+        StatementResponse response = statementService.createDemandTransaction(member, userId, statementRequest);
         return ResponseEntity.status(201).body(response);
     }
 
     // 거래 내역 삭제 (DELETE /business/{userId}/transactions/{txnId})
     @DeleteMapping("/{userId}/transactions/{txnId}")
-    public ResponseEntity<Long> deleteTransaction(
+    public ResponseEntity<Integer> deleteTransaction(
             @GetAuthenticatedUser MemberEntity member,
-            @PathVariable Long userId,
-            @PathVariable Long txnId) {
-        Long deleteId = statementService.deleteTransaction(userId, txnId);
+            @PathVariable String userId,
+            @PathVariable int txnId) {
+        int deleteId = statementService.deleteTransaction(member, userId, txnId);
         return ResponseEntity.ok(deleteId);
     }
 
     // 거래명세표 조회 (GET /business/{userId}/transactions/{txnId})
     @GetMapping("/{userId}/transactions/{txnId}")
-    public ResponseEntity<StatementResponse> getTransactionStatement(
+    public ResponseEntity<GetStatementResponse> getTransactionStatement(
             @GetAuthenticatedUser MemberEntity member,
-            @PathVariable Long userId,
-            @PathVariable Long txnId) {
-        StatementResponse response = statementService.getTransactionStatement(userId, txnId);
+            @PathVariable String userId,
+            @PathVariable int txnId) {
+        GetStatementResponse response = statementService.getTransactionStatement(member, userId, txnId);
         return ResponseEntity.ok(response);
     }
 }

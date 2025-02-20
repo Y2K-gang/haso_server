@@ -40,13 +40,15 @@ public class MemberEntity {
     String storeNo; // 사업장 번호
 
     @Column(nullable = false)
-    String faxNo; // 사업장 번호
+    String faxNo; // 팩스 번호
 
     @Column(nullable = false)
     String businessNo; // 사업자 등록 번호
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MemberType role;
+
 
 //    // 비밀번호 저장 전에 암호화
 //    @PrePersist

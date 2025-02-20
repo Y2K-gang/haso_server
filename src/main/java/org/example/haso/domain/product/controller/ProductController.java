@@ -25,7 +25,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(
             @GetAuthenticatedUser MemberEntity member,
-            @RequestBody ProductRequest request) {
+            @ModelAttribute ProductRequest request) {
         ProductResponse response = productService.createProduct(member, request);
         return ResponseEntity.status(201).body(response);
     }

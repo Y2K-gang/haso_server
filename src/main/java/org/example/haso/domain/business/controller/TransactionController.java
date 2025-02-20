@@ -27,7 +27,10 @@ public class TransactionController {
     @Autowired
     private BusinessService businessService;
 
+    @Autowired
     private StatementService statementService;
+
+    @Autowired
     private TransactionService transactionService;
 
 

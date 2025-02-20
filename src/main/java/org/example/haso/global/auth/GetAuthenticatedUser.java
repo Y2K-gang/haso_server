@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : #this.userEntity")
+@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : #this.entity")
 public @interface GetAuthenticatedUser { }

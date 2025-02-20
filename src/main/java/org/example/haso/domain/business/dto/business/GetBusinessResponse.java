@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class GetBusinessResponse {
+
     private String userId; // 거래처 id
     private List<String> handlingProduct; // 취급 상품
 
