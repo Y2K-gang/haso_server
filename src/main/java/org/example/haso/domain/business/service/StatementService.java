@@ -10,10 +10,7 @@ import org.example.haso.domain.business.dto.statement.GetStatementResponse;
 import org.example.haso.domain.business.dto.statement.StatementRequest;
 import org.example.haso.domain.business.dto.statement.StatementResponse;
 import org.example.haso.domain.business.dto.transaction.TransactionResponse;
-import org.example.haso.domain.business.model.Business;
-import org.example.haso.domain.business.model.BusinessType;
-import org.example.haso.domain.business.model.Item;
-import org.example.haso.domain.business.model.Statement;
+import org.example.haso.domain.business.model.*;
 import org.example.haso.domain.business.repository.BusinessRepository;
 import org.example.haso.domain.business.repository.ItemRepository;
 import org.example.haso.domain.business.repository.StatementRepository;
@@ -36,15 +33,26 @@ public class StatementService {
     private BusinessRepository businessRepository;
 
     @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
     private StatementRepository statementRepository;
 
     @Autowired
     private ItemRepository itemRepository;
 
     @Transactional
-    public StatementResponse createTransaction(MemberEntity member, String userId, StatementRequest statementRequest, BusinessType btype) {
+    public StatementResponse createStatement(MemberEntity member, String userId, StatementRequest statementRequest, BusinessType btype) {
         // 거래처 찾기
         Business business = businessRepository.findByUserId(userId);
+
+        if (business == null) {
+            System.out.println("Business not found for userId: " + member.getUserId());
+            throw new IllegalArgumentException("Business not found");
+        }
+
+        Transaction transaction = createTransaction(member, userId, business, statementRequest, btype);
+
 
         // Statement 객체 생성 및 저장
         Statement statement = Statement.builder()
@@ -61,6 +69,7 @@ public class StatementService {
                 .build();
 
         statement = statementRepository.save(statement);
+
 
         // Item 객체 생성
         List<Item> items = statementRequest.getItems().stream()
@@ -88,6 +97,7 @@ public class StatementService {
         // 품목 리스트 저장
         itemRepository.saveAll(items);
 
+
         return new StatementResponse(
                 statement.getTxnId(),
                 statement.getBtype(),
@@ -100,29 +110,25 @@ public class StatementService {
 
     @Transactional
     public StatementResponse createSupplyTransaction(MemberEntity member, String userId, StatementRequest statementRequest) {
-        return createTransaction(member, userId, statementRequest, BusinessType.SUPPLY);
+        return createStatement(member, userId, statementRequest, BusinessType.SUPPLY);
     }
 
     @Transactional
     public StatementResponse createDemandTransaction(MemberEntity member, String userId, StatementRequest statementRequest) {
 
-        return createTransaction(member, userId, statementRequest, BusinessType.DEMAND);
+        return createStatement(member, userId, statementRequest, BusinessType.DEMAND);
     }
 
     @Transactional
     public GetStatementResponse getTransactionStatement(MemberEntity member, String userId, int txnId) {
-//        Statement member_userId = Statement.fromMemberEntity(member);
 
         String user = member.getUserId();  // 여기서 userId를 가져옵니다.
         Statement statement = statementRepository.findByUserAndTxnId(user, txnId);
 
-//        // 거래처 찾기
         Business business = statement.getBusiness();
 
-        // 품목 정보 조회
         List<Item> items = itemRepository.findByStatement(statement);
 
-        // 품목 정보를 리스트로 변환
         List<GetItemResponse> itemResponses = items.stream()
                 .map(item -> GetItemResponse.builder()
                         .itemId(item.getItemId())
@@ -150,9 +156,9 @@ public class StatementService {
                 .tel(statement.getTel())
                 .businessNo(business.getBusiness_no())
                 .businessAddress(statement.getBusinessAddress())
-                .faxNumber(business.getFax_number())  // 팩스 번호
-                .tradeName(business.getTrade_name())  // 상호
-                .items(itemResponses)  // 품목 정보 (리스트)
+                .faxNumber(business.getFax_number())
+                .tradeName(business.getTrade_name())
+                .items(itemResponses)
                 .build();
     }
 
@@ -162,13 +168,32 @@ public class StatementService {
     // 거래 내역 삭제
     @Transactional
     public int deleteTransaction(MemberEntity member, String userId, int txnId) {
-
-        String user = member.getUserId();  // 여기서 userId를 가져옵니다.
+        String user = member.getUserId();
         Statement statement = statementRepository.findByUserAndTxnId(user, txnId);
 
         statementRepository.delete(statement);
         return txnId;
     }
+
+
+    public Transaction createTransaction(MemberEntity member, String userId, Business business, StatementRequest statementRequest, BusinessType btype) {
+
+        Transaction transaction = new Transaction();
+
+        transaction.setBtype(btype);
+        transaction.setBusiness(business);
+        transaction.setUser(business.getUser());
+        transaction.setUserId(business.getUserId());
+        transaction.setDate(statementRequest.getDate());
+
+        transactionRepository.save(transaction);
+
+        business.addTransaction(transaction);
+
+        return transaction;
+    }
+
+
 
 
 }

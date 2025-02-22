@@ -12,4 +12,5 @@ public interface StatementRepository extends JpaRepository<Statement, Integer> {
 
         Statement findByUserAndTxnId(String user, int txnId);
 
+//        Statement findByBusinessAndTxnId(Business business, int txnId);
 }
