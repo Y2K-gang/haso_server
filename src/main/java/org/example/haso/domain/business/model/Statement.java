@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.haso.domain.auth.entity.MemberEntity;
 import org.example.haso.domain.business.dto.item.ItemRequest;
+import org.example.haso.domain.business.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +26,7 @@ public class Statement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int txnId; // 거래 내역 ID
 
+    @Column(name = "user_id", nullable = false)
     private String user; // userId -> 유저별 데이터 구별 위함
 
     private Date date; // 거래 일자 (YYYY-MM-DD)
@@ -36,22 +41,26 @@ public class Statement {
 //    private List<Item> items = new ArrayList<>();
     private List<Item> items; // 품목 목록
 
-    @OneToOne
-    @JoinColumn(name = "user_Id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "business", nullable = false)
     private Business business; // 거래처와의 관계
 
     private BusinessType btype;
 
 
-    public static Statement fromMemberEntity(MemberEntity member) {
-        // userId가 null인지 확인
-        if (member.getUserId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
-        }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transaction_id")
+    private Transaction transaction;
 
-        return Statement.builder()
-                .user(member.getUserId()) // user_id 설정
-                .build();
-    }
+//    public static Statement fromMemberEntity(MemberEntity member) {
+//        // userId가 null인지 확인
+//        if (member.getUserId() == null) {
+//            throw new IllegalArgumentException("User ID cannot be null");
+//        }
+//
+//        return Statement.builder()
+//                .user(member.getUserId()) // user_id 설정
+//                .build();
+//    }
 
 }

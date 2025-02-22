@@ -1,19 +1,14 @@
 package org.example.haso.domain.auth.service;
 
-import jakarta.transaction.Transactional;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.haso.domain.auth.BusinessRequestFormat;
 import org.example.haso.domain.auth.dto.BusinessValidateRequest;
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.web.client.RestClientException;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
 
 @Service
 @RequiredArgsConstructor
@@ -28,62 +23,65 @@ public class BusinessValidationService {
     @Value("${api.url}")
     private String apiUrl;
 
-    public String validateBusinessNumber(BusinessValidateRequest request) {
-        try {
-            // ✅ 사업자번호가 null이거나 비어 있으면 예외 발생
-            if (request.getB_no() == null || request.getB_no().isBlank()) {
-                throw new IllegalArgumentException("사업자등록번호(b_no)는 필수값입니다.");
-            }
+    public String validateBusinessNumber(BusinessValidateRequest request) throws Exception {
+        if (request.getB_no() == null || request.getB_no().isBlank()) {
+            throw new IllegalArgumentException("사업자등록번호(b_no)는 필수값입니다.");
+        }
 
-            // ✅ 서비스키 이중 인코딩 방지
-            String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                    .queryParam("serviceKey", serviceKey)  // 인코딩 없이 그대로 사용
-                    .toUriString();
+        // API 요청 본문에 serviceKey 포함시키기
+        BusinessRequestFormat requestFormat = BusinessRequestFormat.from(request, serviceKey);
 
-            // ✅ JSON 요청 데이터 생성
-            BusinessRequestFormat requestBody = BusinessRequestFormat.from(request);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-            // ✅ HTTP 요청 헤더 설정
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        // 요청 본문 JSON으로 변환
+        String requestBody = objectMapper.writeValueAsString(requestFormat);
 
-            // ✅ HttpEntity 설정
-            HttpEntity<BusinessRequestFormat> entity = new HttpEntity<>(requestBody, headers);
+        HttpEntity<String> httpRequest = new HttpEntity<>(requestBody, headers);
 
-            // ✅ 로그 추가
-            System.out.println("보낼 URL: " + url);
-            System.out.println("보낼 JSON: " + objectMapper.writeValueAsString(requestBody));
+        ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, httpRequest, String.class);
 
-            // ✅ API 호출
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-            // ✅ 응답 로그 추가
-            System.out.println("응답 코드: " + response.getStatusCode());
-            System.out.println("응답 본문: " + response.getBody());
-
-            // ✅ 응답 처리
-            if (response.getStatusCode() == HttpStatus.OK) {
-                JsonNode jsonNode = objectMapper.readTree(response.getBody());
-                JsonNode dataNode = jsonNode.path("data");
-                if (dataNode.isArray() && dataNode.size() > 0) {
-                    JsonNode validNode = dataNode.get(0).path("valid");
-                    return switch (validNode.asText("unknown")) {
-                        case "01" -> "유효한 사업자등록번호입니다.";
-                        case "02" -> "유효하지 않은 사업자등록번호입니다.";
-                        default -> "알 수 없는 응답입니다.";
-                    };
-                } else {
-                    return "API 응답 데이터가 없습니다.";
-                }
-            }
-            return "API 요청 실패: " + response.getStatusCode();
-        } catch (IllegalArgumentException e) {
-            return "입력 오류: " + e.getMessage();
-        } catch (RestClientException e) {
-            return "API 호출 중 네트워크 오류 발생: " + e.getMessage();
-        } catch (Exception e) {
-            return "API 요청 중 오류 발생: " + e.getMessage();
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return processApiResponse(response.getBody());
+        } else {
+            throw new Exception("API 요청 실패: " + response.getStatusCode());
         }
     }
 
+    private String processApiResponse(String responseBody) throws Exception {
+        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        String statusCode = jsonNode.path("status_code").asText();
+
+        switch (statusCode) {
+            case "OK":
+                return handleValidResponse(jsonNode);
+            case "BAD_JSON_REQUEST":
+                return "잘못된 JSON 포맷입니다.";
+            case "REQUEST_DATA_MALFORMED":
+                return "필수 요청 파라미터 누락";
+            case "TOO_LARGE_REQUEST":
+                return "요청 사업자번호 또는 정보가 100개를 초과했습니다.";
+            case "INTERNAL_ERROR":
+                return "서버 내부 오류가 발생했습니다.";
+            case "HTTP_ERROR":
+                return "HTTP 오류가 발생했습니다.";
+            default:
+                return "알 수 없는 오류가 발생했습니다.";
+        }
+    }
+
+    private String handleValidResponse(JsonNode jsonNode) {
+        JsonNode dataNode = jsonNode.path("data");
+        if (dataNode.isArray() && dataNode.size() > 0) {
+            JsonNode validNode = dataNode.get(0).path("valid");
+            if ("01".equals(validNode.asText())) {
+                return "유효한 사업자등록번호입니다.";
+            } else if ("02".equals(validNode.asText())) {
+                return "유효하지 않은 사업자등록번호입니다.";
+            } else {
+                return "알 수 없는 응답입니다.";
+            }
+        }
+        return "API 응답 데이터가 없습니다.";
+    }
 }

@@ -50,14 +50,4 @@ public class MemberEntity {
     private MemberType role;
 
 
-//    // 비밀번호 저장 전에 암호화
-//    @PrePersist
-//    @PreUpdate
-//    public void encryptPassword() {
-//        if (this.password != null) {
-//            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//            this.password = passwordEncoder.encode(this.password);  // 비밀번호 암호화
-//        }
-//    }
-
 }

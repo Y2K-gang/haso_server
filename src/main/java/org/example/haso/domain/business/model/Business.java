@@ -6,6 +6,9 @@ import lombok.*;
 import org.example.haso.domain.auth.entity.MemberEntity;
 import org.example.haso.domain.business.dto.business.BusinessRequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -27,9 +30,23 @@ public class Business {
     private String fax_number; // 팩스 번호
 
     private String trade_name; // 상호
-//
-//    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private List<Statement> statements; // 거래 내역 리스트
+
+
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Statement> statements; // 거래 내역 리스트
+
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Transaction> transactions;  // Transaction 리스트
+
+    public void addTransaction(Transaction transaction) {
+        if (this.transactions == null) {
+            this.transactions = new ArrayList<>();
+        }
+        this.transactions.add(transaction);
+        transaction.setBusiness(this);  // 양방향 관계 설정
+    }
+
+
 
     public Business(BusinessRequest request) {
         this.userId = request.getUserId();
