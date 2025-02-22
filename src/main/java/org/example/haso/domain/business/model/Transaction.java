@@ -15,7 +15,7 @@ import java.util.Date;
 @Builder
 public class Transaction {
 
-    private String user; // userId -> 유저별 데이터 구별 위함
+//    private String user; // userId -> 유저별 데이터 구별 위함
 
     @Id
     private int txnId;

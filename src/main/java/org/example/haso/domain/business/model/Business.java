@@ -31,6 +31,8 @@ public class Business {
 
     private String trade_name; // 상호
 
+    private BusinessType businessType;
+
 
     @OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Statement> statements; // 거래 내역 리스트

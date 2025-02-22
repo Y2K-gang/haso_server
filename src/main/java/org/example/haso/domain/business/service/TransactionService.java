@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
@@ -26,44 +26,42 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
 
     @Autowired
+    private BusinessRepository businessRepository;
+
+    @Autowired
     private StatementRepository statementRepository;
 
     @Autowired
     private MemberRepository memberRepository;
 
 
-    // 공급자용 전체 조회
+    // 공급자용 조회 (SUPPLY)
     @Transactional
     public List<TransactionResponse> getAllSupplyBusiness(MemberEntity member, String userId) {
-
-        MemberEntity memberEntity = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("입력하신 userId로 user를 찾을 수 없어요"));
-
-        List<Transaction> transactions = transactionRepository.findByUserAndUserIdAndBtype(member.getUserId(), memberEntity.getUserId(), BusinessType.SUPPLY);
-
-//        String user = member.getUserId();
-//        List<Statement> statements = statementRepository.findByUserAndUserIdAndBtype(user, memberEntity.getUserId(), BusinessType.SUPPLY);
-//        String user = member.getUserId();
-//        List<Statement> statements = statementRepository.findByUserIdAndUserIdAndBtype(member.getUserId(), memberEntity.getUserId(), BusinessType.SUPPLY);
-
-        return transactions.stream()
-                .map(TransactionResponse::from)
-                .toList();
+        return getTransactionsByType(member, userId, BusinessType.SUPPLY);
     }
 
-    // 수요자용 전체 조회 (Demand-side query)
+    // 수요자용 조회 (DEMAND)
     @Transactional
     public List<TransactionResponse> getAllDemandBusiness(MemberEntity member, String userId) {
-        MemberEntity memberEntity = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("입력하신 userId로 user를 찾을 수 없어요"));
+        return getTransactionsByType(member, userId, BusinessType.DEMAND);
+    }
 
-        List<Transaction> transactions = transactionRepository.findByUserAndUserIdAndBtype(member.getUserId(), memberEntity.getUserId(), BusinessType.SUPPLY);
+    // 공통 조회 메서드
+    private List<TransactionResponse> getTransactionsByType(MemberEntity member, String userId, BusinessType btype) {
+        // business 조회
+        Business business = businessRepository.findByUserId(userId);
+        if (business == null) {
+            return List.of(); // business가 없으면 빈 리스트 반환
+        }
+
+        // 트랜잭션 조회
+        List<Transaction> transactions = transactionRepository.findByBtypeAndUserIdAndBusinessUserId(btype, member.getUserId(), business.getUserId());
+
         return transactions.stream()
                 .map(TransactionResponse::from)
                 .toList();
     }
 
+
 }
-
-
-
