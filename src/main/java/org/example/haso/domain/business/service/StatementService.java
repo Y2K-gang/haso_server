@@ -66,6 +66,7 @@ public class StatementService {
                 .name(statementRequest.getName())
                 .business(business)
                 .btype(btype)
+                .transaction(transaction)
                 .build();
 
         statement = statementRepository.save(statement);
@@ -182,8 +183,8 @@ public class StatementService {
 
         transaction.setBtype(btype);
         transaction.setBusiness(business);
-        transaction.setUser(business.getUser());
-        transaction.setUserId(business.getUserId());
+//        transaction.setUser(business.getUser());
+        transaction.setUserId(member.getUserId());
         transaction.setDate(statementRequest.getDate());
 
         transactionRepository.save(transaction);
