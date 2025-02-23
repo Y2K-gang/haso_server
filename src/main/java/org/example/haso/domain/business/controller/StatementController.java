@@ -66,18 +66,18 @@ public class StatementController {
     public ResponseEntity<Integer> deleteTransaction(
             @GetAuthenticatedUser MemberEntity member,
             @PathVariable String userId,
-            @PathVariable int txnId) {
-        int deleteId = statementService.deleteTransaction(member, userId, txnId);
+            @PathVariable int transactionId) {
+        int deleteId = statementService.deleteTransaction(member, userId, transactionId);
         return ResponseEntity.ok(deleteId);
     }
 
-    // 거래명세표 조회 (GET /business/{userId}/transactions/{txnId})
-    @GetMapping("/{userId}/transactions/{txnId}")
+    // 거래명세표 조회 (GET /business/{userId}/transactions/{transactionId})
+    @GetMapping("/{userId}/transactions/{transactionId}")
     public ResponseEntity<GetStatementResponse> getTransactionStatement(
             @GetAuthenticatedUser MemberEntity member,
             @PathVariable String userId,
-            @PathVariable int txnId) {
-        GetStatementResponse response = statementService.getTransactionStatement(member, userId, txnId);
+            @PathVariable int transactionId) {
+        GetStatementResponse response = statementService.getTransactionStatement(member, userId, transactionId);
         return ResponseEntity.ok(response);
     }
 }

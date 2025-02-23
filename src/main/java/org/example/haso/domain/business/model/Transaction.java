@@ -18,6 +18,7 @@ public class Transaction {
 //    private String user; // userId -> 유저별 데이터 구별 위함
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int txnId;
 
     private String userId; // 거래처 id

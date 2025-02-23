@@ -1,5 +1,6 @@
 package org.example.haso.domain.business.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.haso.domain.auth.entity.MemberEntity;
@@ -121,10 +122,13 @@ public class StatementService {
     }
 
     @Transactional
-    public GetStatementResponse getTransactionStatement(MemberEntity member, String userId, int txnId) {
+    public GetStatementResponse getTransactionStatement(MemberEntity member, String userId, int transactionId) {
 
-        String user = member.getUserId();  // 여기서 userId를 가져옵니다.
-        Statement statement = statementRepository.findByUserAndTxnId(user, txnId);
+//        String user = member.getUserId();  // 여기서 userId를 가져옵니다.
+
+        Statement statement = statementRepository
+                .findByTransaction_TxnId(transactionId)
+                .orElseThrow(() -> new EntityNotFoundException("Statement not found for transactionId: " + transactionId));
 
         Business business = statement.getBusiness();
 
@@ -168,12 +172,15 @@ public class StatementService {
 
     // 거래 내역 삭제
     @Transactional
-    public int deleteTransaction(MemberEntity member, String userId, int txnId) {
+    public int deleteTransaction(MemberEntity member, String userId, int transactionId) {
         String user = member.getUserId();
-        Statement statement = statementRepository.findByUserAndTxnId(user, txnId);
+
+        Statement statement = statementRepository
+                .findByTransaction_TxnId(transactionId)
+                .orElseThrow(() -> new EntityNotFoundException("Statement not found for transactionId: " + transactionId));
 
         statementRepository.delete(statement);
-        return txnId;
+        return transactionId;
     }
 
 
