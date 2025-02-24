@@ -26,6 +26,15 @@ public class GetStatementResponse {
     private String businessAddress; // 사업장 주소
     private String name; //  성명
 
+    private int unit_auto;// 수량 (자동 계산된 값)
+    private int quantity_auto;// 공급가액 (자동 계산된 값)
+    private int vat; // VAT
+    private int total; // 합계
+    private String acquirerName; // 인수
+
+    private int out_amt;	// 미수금
+    private String dep_acc;	// 입금계좌
+
     private List<GetItemResponse> items; // 품목 정보 리스트
 
 }

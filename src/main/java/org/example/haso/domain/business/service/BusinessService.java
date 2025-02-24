@@ -38,6 +38,8 @@ public class BusinessService {
 
         if (request.getUserId() == null) {
             throw new IllegalArgumentException("ID는 null일 수 없어요");
+        } else if (request.getUserId().equals(member.getUserId())) {
+            throw new IllegalArgumentException("본인의 ID는 거래처로 추가할 수 없어요");
         }
 
         MemberEntity memberEntity = memberRepository.findById(request.getUserId())
@@ -52,6 +54,11 @@ public class BusinessService {
     @Transactional
     public GetBusinessResponse createBusiness(MemberEntity member, BusinessRequest request) {
 //        Business business = new Business(request);
+
+        if (request.getUserId().equals(member.getUserId())) {
+            throw new IllegalArgumentException("본인의 ID는 거래처로 추가할 수 없어요");
+        }
+
         MemberEntity memberEntity = memberRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("입력하신 userId로 user를 찾을 수 없어요"));
 

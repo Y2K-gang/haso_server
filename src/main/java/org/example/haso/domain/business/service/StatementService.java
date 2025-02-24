@@ -67,8 +67,22 @@ public class StatementService {
                 .name(statementRequest.getName())
                 .business(business)
                 .btype(btype)
+                .unit_auto(statementRequest.getUnit_auto())
+                .quantity_auto(statementRequest.getQuantity_auto())
+                .vat(statementRequest.getVat())
+                .total(statementRequest.getTotal())
+//                .acquirerName(statementRequest.getAcquirerName())
+                .acquirerName(null)
+                .out_amt(statementRequest.getOut_amt())
+                .dep_acc(statementRequest.getDep_acc())
                 .transaction(transaction)
                 .build();
+
+        if (btype.equals(BusinessType.SUPPLY)) { // 공급
+            statement.setAcquirerName(statementRequest.getAcquirerName());
+        } else { // 수요
+            statement.setAcquirerName(member.getUserId());
+        }
 
         statement = statementRepository.save(statement);
 
@@ -82,13 +96,13 @@ public class StatementService {
                         .unitPrice(itemRequest.getUnitPrice())
                         .supplyPrice(itemRequest.getSupplyPrice())
                         .vatAmount(itemRequest.getVatAmount())
-                        .unit_auto(itemRequest.getUnit_auto())
-                        .quantity_auto(itemRequest.getQuantity_auto())
-                        .vat(itemRequest.getVat())
-                        .total(itemRequest.getTotal())
-                        .acquirerName(itemRequest.getAcquirerName())
-                        .out_amt(itemRequest.getOut_amt())
-                        .dep_acc(itemRequest.getDep_acc())
+//                        .unit_auto(itemRequest.getUnit_auto())
+//                        .quantity_auto(itemRequest.getQuantity_auto())
+//                        .vat(itemRequest.getVat())
+//                        .total(itemRequest.getTotal())
+//                        .acquirerName(itemRequest.getAcquirerName())
+//                        .out_amt(itemRequest.getOut_amt())
+//                        .dep_acc(itemRequest.getDep_acc())
                         .build())
                 .collect(Collectors.toList());
 
@@ -143,13 +157,13 @@ public class StatementService {
                         .unitPrice(item.getUnitPrice())
                         .supplyPrice(item.getSupplyPrice())
                         .vatAmount(item.getVatAmount())
-                        .unit_auto(item.getUnit_auto())
-                        .quantity_auto(item.getQuantity_auto())
-                        .vat(item.getVat())
-                        .total(item.getTotal())
-                        .acquirerName(item.getAcquirerName())
-                        .out_amt(item.getOut_amt())
-                        .dep_acc(item.getDep_acc())
+//                        .unit_auto(item.getUnit_auto())
+//                        .quantity_auto(item.getQuantity_auto())
+//                        .vat(item.getVat())
+//                        .total(item.getTotal())
+//                        .acquirerName(item.getAcquirerName())
+//                        .out_amt(item.getOut_amt())
+//                        .dep_acc(item.getDep_acc())
                         .build())
                 .collect(Collectors.toList());
 
@@ -163,6 +177,13 @@ public class StatementService {
                 .businessAddress(statement.getBusinessAddress())
                 .faxNumber(business.getFax_number())
                 .tradeName(business.getTrade_name())
+                .unit_auto(statement.getUnit_auto())
+                .quantity_auto(statement.getQuantity_auto())
+                .vat(statement.getVat())
+                .total(statement.getTotal())
+                .acquirerName(statement.getAcquirerName())
+                .out_amt(statement.getOut_amt())
+                .dep_acc(statement.getDep_acc())
                 .items(itemResponses)
                 .build();
     }
