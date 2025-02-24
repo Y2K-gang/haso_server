@@ -1,6 +1,8 @@
 package org.example.haso.domain.auth.dto;
 
 import lombok.*;
+import org.example.haso.domain.auth.BusinessDetail;
+import java.util.List;
 
 @Getter
 @Setter
@@ -9,8 +11,12 @@ import lombok.*;
 @Builder
 public class BusinessValidateRequest {
 
-    private String b_no; // 사업자등록번호
-    private String start_dt; // 개업일자(YYYYMMDD 포맷)
-    private String p_nm; // 대표자 성명1
+    private List<BusinessDetail> businesses; // 사업체 리스트
 
+    @Override
+    public String toString() {
+        return "BusinessValidateRequest{" +
+                "businesses=" + businesses +
+                '}';
+    }
 }
