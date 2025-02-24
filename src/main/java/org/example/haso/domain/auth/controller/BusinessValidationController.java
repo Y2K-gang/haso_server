@@ -16,6 +16,8 @@ public class BusinessValidationController {
 
     @PostMapping("/validate")
     public ResponseEntity<String> validateBusinessNumber(@RequestBody BusinessValidateRequest request) {
+        System.out.println("Received request: " + request);
+
         try {
             String result = businessValidationService.validateBusinessNumber(request);
             return ResponseEntity.ok(result);
@@ -25,4 +27,5 @@ public class BusinessValidationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("API 요청 중 오류 발생: " + e.getMessage());
         }
     }
+
 }
