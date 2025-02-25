@@ -96,13 +96,6 @@ public class StatementService {
                         .unitPrice(itemRequest.getUnitPrice())
                         .supplyPrice(itemRequest.getSupplyPrice())
                         .vatAmount(itemRequest.getVatAmount())
-//                        .unit_auto(itemRequest.getUnit_auto())
-//                        .quantity_auto(itemRequest.getQuantity_auto())
-//                        .vat(itemRequest.getVat())
-//                        .total(itemRequest.getTotal())
-//                        .acquirerName(itemRequest.getAcquirerName())
-//                        .out_amt(itemRequest.getOut_amt())
-//                        .dep_acc(itemRequest.getDep_acc())
                         .build())
                 .collect(Collectors.toList());
 
@@ -157,13 +150,6 @@ public class StatementService {
                         .unitPrice(item.getUnitPrice())
                         .supplyPrice(item.getSupplyPrice())
                         .vatAmount(item.getVatAmount())
-//                        .unit_auto(item.getUnit_auto())
-//                        .quantity_auto(item.getQuantity_auto())
-//                        .vat(item.getVat())
-//                        .total(item.getTotal())
-//                        .acquirerName(item.getAcquirerName())
-//                        .out_amt(item.getOut_amt())
-//                        .dep_acc(item.getDep_acc())
                         .build())
                 .collect(Collectors.toList());
 

@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductRequest {
 
     private String title; // 상품 제목
-    private MultipartFile picture; // 상품 사진
+//    private MultipartFile picture; // 상품 사진
     private int quantity; // 상품 수량(kg)
     private int price; // 상품 가격(kg)
     private String description; // 상품 설명
