@@ -25,28 +25,33 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(
             @GetAuthenticatedUser MemberEntity member,
-            @ModelAttribute ProductRequest request) {
+            @RequestBody ProductRequest request) {
         ProductResponse response = productService.createProduct(member, request);
         return ResponseEntity.status(201).body(response);
     }
 
-    // 상품 삭제 (DELETE /product/{id})
+    // 상품 삭제 (DELETE )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Integer> deleteProduct(@GetAuthenticatedUser MemberEntity member, @PathVariable int id) {
+    public ResponseEntity<Integer> deleteProduct(
+            @GetAuthenticatedUser MemberEntity member,
+            @PathVariable int id) {
         int deleteId = productService.deleteProduct(member, id);
         return ResponseEntity.ok(deleteId);
     }
 
     // 상품 상세 조회 (GET /product/{id})
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@GetAuthenticatedUser MemberEntity member, @PathVariable int id) {
+    public ResponseEntity<ProductResponse> getProduct(
+            @GetAuthenticatedUser MemberEntity member,
+            @PathVariable int id) {
         ProductResponse response = productService.getProduct(member, id);
         return ResponseEntity.ok(response);
     }
 
     // 상품 전체 조회 (GET /product)
     @GetMapping
-    public ResponseEntity<List<GetProductResponse>> getAllProduct(@GetAuthenticatedUser MemberEntity member) {
+    public ResponseEntity<List<GetProductResponse>> getAllProduct(
+            @GetAuthenticatedUser MemberEntity member) {
         List<GetProductResponse> responses = productService.getAllProduct(member);
         return ResponseEntity.ok(responses);
     }

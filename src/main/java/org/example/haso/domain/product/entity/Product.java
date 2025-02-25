@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.haso.domain.auth.entity.MemberEntity;
 import org.example.haso.domain.product.dto.ProductRequest;
+import org.example.haso.domain.profile.entity.Profile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class Product {
 
     private String title; // 상품 제목
 
-    private String picture; // 상품 사진
+//    private String picture; // 상품 사진
 
     private int quantity; // 상품 수량(kg)
 
@@ -39,6 +40,9 @@ public class Product {
 
     private LocalDateTime createdDate; // 생성된 시간
 
+//    @ManyToOne
+//    private Profile profile;
+
     public Product(ProductRequest productRequest) {
         this.title = productRequest.getTitle();
         this.quantity = productRequest.getQuantity();
@@ -46,7 +50,7 @@ public class Product {
         this.description = productRequest.getDescription();
         this.location = productRequest.getLocation();
         this.category = productRequest.getCategory();
-        this.picture = productRequest.getPicture() != null ? productRequest.getPicture().getOriginalFilename() : null;
+//        this.picture = productRequest.getPicture() != null ? productRequest.getPicture().getOriginalFilename() : null;
 
     }
 

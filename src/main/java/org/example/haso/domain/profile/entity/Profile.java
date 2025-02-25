@@ -21,6 +21,10 @@ public class Profile {
     @ElementCollection
     private List<String> handlingProduct; // 취급 상품
 
+//    @OneToMany
+//    @JoinColumn(name = "product_id", nullable = false)
+//    private List<Product> product;
+
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     private Edit edit;
 }

@@ -36,15 +36,15 @@ public class ProductService {
     @Transactional
     public ProductResponse createProduct(MemberEntity member, ProductRequest request) {
 
-        String pictureUrl = null;
-        if (request.getPicture() != null) {
-            pictureUrl = s3Controller.s3Upload(request.getPicture());
-        }
+//        String pictureUrl = null;
+//        if (request.getPicture() != null) {
+//            pictureUrl = s3Controller.s3Upload(request.getPicture());
+//        }
 
         Product product = Product.builder()
                 .userId(member)
                 .title(request.getTitle())
-                .picture(pictureUrl)
+//                .picture(pictureUrl)
                 .quantity(request.getQuantity())
                 .price(request.getPrice())
                 .description(request.getDescription())
@@ -70,7 +70,7 @@ public class ProductService {
             throw new RuntimeException("no permission to delete this product");
         }
 
-        s3Controller.s3Delete(product.getPicture());
+//        s3Controller.s3Delete(product.getPicture());
         productRepository.deleteById(id);
         return id;
     }
@@ -122,10 +122,10 @@ public class ProductService {
             product.setPrice(editRequest.getPrice());
         }
 
-        if (editRequest.getPicture() != null) {
-            s3Controller.s3Delete(product.getPicture());
-            s3Controller.s3Upload(editRequest.getPicture());
-        }
+//        if (editRequest.getPicture() != null) {
+//            s3Controller.s3Delete(product.getPicture());
+//            s3Controller.s3Upload(editRequest.getPicture());
+//        }
 
         return ProductResponse.from(productRepository.save(product));
     }
