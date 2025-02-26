@@ -43,6 +43,37 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+//    // 회원가입 - 기본 정보 받고 인증 코드 전송
+//    @PostMapping("/signup")
+//    public ResponseEntity<BaseResponse<String>> sendVerificationCode(@Valid @RequestBody SignupMemberRequest dto, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            String errorMessage = bindingResult.getAllErrors().stream()
+//                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+//                    .collect(Collectors.joining(", "));
+//            return ResponseEntity.badRequest().body(new BaseResponse<>(HttpStatus.BAD_REQUEST.value(), errorMessage, null));
+//        }
+//
+//        return ResponseEntity.ok(new BaseResponse<>(
+//                HttpStatus.OK.value(),
+//                memberService.sendVerificationCode(dto),
+//                null
+//        ));
+//    }
+//
+//    // 전화번호 인증 - 인증 후 나머지 정보 입력받고 최종 저장
+//    @PostMapping("/verify")
+//    public ResponseEntity<BaseResponse<TokenInfo>> verifyPhoneNumber(
+//            @RequestParam String tel,
+//            @RequestParam String code,
+//            @RequestBody SignupMemberRequest dto) {
+//
+//        return ResponseEntity.ok(new BaseResponse<>(
+//                HttpStatus.OK.value(),
+//                "전화번호 인증이 완료되었습니다.",
+//                memberService.verifyPhoneNumber(tel, code, dto)
+//        ));
+//    }
+
     @PostMapping("/signin")
     public BaseResponse<TokenInfo> getMember(@RequestBody SigninMemberRequest dto) {
         return new BaseResponse<>(
