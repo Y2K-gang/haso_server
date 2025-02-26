@@ -30,7 +30,7 @@ public class ProductController {
         return ResponseEntity.status(201).body(response);
     }
 
-    // 상품 삭제 (DELETE )
+    // 상품 삭제 (DELETE /product/{id})
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteProduct(
             @GetAuthenticatedUser MemberEntity member,
