@@ -15,8 +15,8 @@ import org.example.haso.domain.profile.repository.EditRepository;
 import org.example.haso.domain.profile.repository.ProfileRepository;
 import org.example.haso.global.auth.JwtUtils;
 import org.example.haso.global.auth.TokenInfo;
-import org.example.haso.global.util.RedisUtil;
-import org.example.haso.global.util.SmsUtil;
+//import org.example.haso.global.util.RedisUtil;
+//import org.example.haso.global.util.SmsUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
