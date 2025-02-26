@@ -2,10 +2,21 @@ package org.example.haso.domain.profile.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.haso.domain.auth.MemberException;
+import org.example.haso.domain.auth.entity.MemberEntity;
+import org.example.haso.domain.auth.repository.MemberRepository;
+import org.example.haso.domain.product.entity.Category;
 import org.example.haso.domain.product.entity.Product;
 import org.example.haso.domain.profile.dto.EditProfileRequest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.FluentQuery;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Entity
 @Getter
@@ -27,7 +38,7 @@ public class Edit {
     private String storeName; // 상호명
 
     @ElementCollection
-    private List<String> handlingProduct; // 취급 물품
+    private List<Category> handlingProduct; // 취급 물품
 
     @OneToOne
     @JoinColumn(name = "profile_id")
@@ -38,10 +49,10 @@ public class Edit {
         this.password = request.getPassword() != null ? request.getPassword() : this.password;
         this.name = request.getName() != null ? request.getName() : this.name;
         this.tel = request.getTel() != null ? request.getTel() : this.tel;
-        this.businessNo = request.getBusiness_no() != null ? request.getBusiness_no() : this.businessNo;
-        this.faxNo = request.getFax_no() != null ? request.getFax_no() : this.faxNo;
-        this.storeNo = request.getStore_no() != null ? request.getStore_no() : this.storeNo;
-        this.storeName = request.getStore_name() != null ? request.getStore_name() : this.storeName;
+        this.businessNo = request.getBusinessNo() != null ? request.getBusinessNo() : this.businessNo;
+        this.faxNo = request.getFaxNo() != null ? request.getFaxNo() : this.faxNo;
+        this.storeNo = request.getStoreNo() != null ? request.getStoreNo() : this.storeNo;
+        this.storeName = request.getStoreName() != null ? request.getStoreName() : this.storeName;
         this.handlingProduct = request.getHandlingProduct() != null ? request.getHandlingProduct() : this.handlingProduct;
     }
 }

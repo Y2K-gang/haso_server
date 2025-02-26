@@ -26,10 +26,10 @@ public class ProfileController {
     private final ProfileService profileService;
 
 
+    // 프로필 조회 (GET /profile)
     @GetMapping
     public ResponseEntity<ProfileResponse> profile(@GetAuthenticatedUser MemberEntity member) {
-        Profile profile = profileService.getProfile(member); // 프로필 조회
-        ProfileResponse response = new ProfileResponse(profile); // ProfileResponse DTO로 변환
+        ProfileResponse response = profileService.getProfile(member);
         return ResponseEntity.ok(response);
     }
 
@@ -41,39 +41,31 @@ public class ProfileController {
         return ResponseEntity.ok(responses);
     }
 
-
-//    // 상품 전체 조회 (GET /profile/product)
-//    @GetMapping("/product")
-//    public ResponseEntity<List<GetProductResponse>> getAllProduct(@GetAuthenticatedUser MemberEntity member) {
-//        List<GetProductResponse> responses = productService.getAllProduct(member);
-//        return ResponseEntity.ok(responses);
+//    // 상품 삭제 (DELETE /profile/product/{id})
+//    @DeleteMapping("/product/{id}")
+//    public ResponseEntity<Integer> deleteProduct(@GetAuthenticatedUser MemberEntity member, @PathVariable int id) {
+//        int deleteId = productService.deleteProduct(member, id);
+//        return ResponseEntity.ok(deleteId);
+//    }
+//
+//    // 상품 상세 조회 (GET /profile/product/{id})
+//    @GetMapping("/product/{id}")
+//    public ResponseEntity<ProductResponse> getProduct(@GetAuthenticatedUser MemberEntity member, @PathVariable int id) {
+//        ProductResponse response = productService.getProduct(member, id);
+//        return ResponseEntity.ok(response);
+//    }
+//
+//    // 상품 수정 (PATCH /profile/product/{id})
+//    @PatchMapping("/product/{id}")
+//    public ResponseEntity<ProductResponse> editProduct(
+//            @GetAuthenticatedUser MemberEntity member,
+//            @PathVariable int id,
+//            @RequestBody ProductRequest editrequest) {
+//        ProductResponse response = productService.editProduct(member, id, editrequest);
+//        return ResponseEntity.ok(response);
 //    }
 
-    // 상품 삭제 (DELETE /profile/product/{id})
-    @DeleteMapping("/product/{id}")
-    public ResponseEntity<Integer> deleteProduct(@GetAuthenticatedUser MemberEntity member, @PathVariable int id) {
-        int deleteId = productService.deleteProduct(member, id);
-        return ResponseEntity.ok(deleteId);
-    }
-
-    // 상품 상세 조회 (GET /profile/product/{id})
-    @GetMapping("/product/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@GetAuthenticatedUser MemberEntity member, @PathVariable int id) {
-        ProductResponse response = productService.getProduct(member, id);
-        return ResponseEntity.ok(response);
-    }
-
-    // 상품 수정 (PATCH /profile/product/{id})
-    @PatchMapping("/product/{id}")
-    public ResponseEntity<ProductResponse> editProduct(
-            @GetAuthenticatedUser MemberEntity member,
-            @PathVariable int id,
-            @RequestBody ProductRequest editrequest) {
-        ProductResponse response = productService.editProduct(member, id, editrequest);
-        return ResponseEntity.ok(response);
-    }
-
-
+    // 사용자 정보 수정 (PATCH /profile/edit)
     @PatchMapping("/edit")
     public ResponseEntity<EditProfileResponse> edit(@GetAuthenticatedUser MemberEntity member, @RequestBody EditProfileRequest request) {
         EditProfileResponse response = profileService.edit(member, request);

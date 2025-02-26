@@ -12,4 +12,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.userId = :userId")
     List<Product> findByUserId(@Param("userId") String userId);
+
+    @Query("SELECT p FROM Product p WHERE p.userId.userId = :userId ORDER BY p.createdDate DESC")
+    List<Product> findByUserIdOrderByCreatedDateDesc(@Param("userId") String userId);
 }

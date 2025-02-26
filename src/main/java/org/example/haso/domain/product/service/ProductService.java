@@ -130,14 +130,16 @@ public class ProductService {
         return ProductResponse.from(productRepository.save(product));
     }
 
-
-    @Transactional
     // 사용자가 등록한 게시물 조회
+    @Transactional
     public List<GetProductResponse> getUserProducts(MemberEntity member) {
-        return productRepository.findByUserId(member.getUserId())
-                .stream()
-                .map(GetProductResponse::from)
-                .collect(Collectors.toList());
+//        return productRepository.findByUserId(member.getUserId())
+//                .stream()
+//                .map(GetProductResponse::from)
+//                .collect(Collectors.toList());
+
+        List<Product> products = productRepository.findByUserIdOrderByCreatedDateDesc(member.getUserId());
+        return products.stream().map(GetProductResponse::from).toList();
     }
 
 }

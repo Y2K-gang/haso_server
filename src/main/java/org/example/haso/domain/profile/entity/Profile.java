@@ -2,6 +2,7 @@ package org.example.haso.domain.profile.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.haso.domain.product.entity.Category;
 import org.example.haso.domain.product.entity.Product;
 
 import java.util.List;
@@ -19,11 +20,11 @@ public class Profile {
     private String userId; // 사용자 아이디
 
     @ElementCollection
-    private List<String> handlingProduct; // 취급 상품
+    private List<Category> handlingProduct; // 취급 상품
 
-//    @OneToMany
+    @OneToMany
 //    @JoinColumn(name = "product_id", nullable = false)
-//    private List<Product> product;
+    private List<Product> product;
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     private Edit edit;
