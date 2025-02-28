@@ -16,6 +16,7 @@ import org.example.haso.domain.profile.entity.Edit;
 import org.example.haso.domain.profile.entity.Profile;
 import org.example.haso.domain.profile.repository.EditRepository;
 import org.example.haso.domain.profile.repository.ProfileRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +30,13 @@ public class ProfileService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final EditRepository editRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     @Transactional
     public EditProfileResponse edit(MemberEntity member, EditProfileRequest request) {
-        // 로그로 요청값 확인
-        System.out.println("Received business_no: " + request.getBusinessNo());
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         Edit edit = editRepository.findByUserId(member.getUserId());
 
@@ -52,7 +55,7 @@ public class ProfileService {
 
         profileRepository.save(profile);
 
-        member.setPassword(request.getPassword());
+        member.setPassword(encodedPassword);
         member.setName(request.getName());
         member.setTel(request.getTel());
         member.setBusinessNo(request.getBusinessNo());
@@ -61,7 +64,6 @@ public class ProfileService {
         member.setStoreName(request.getStoreName());
 
         memberRepository.save(member);
-
 
         return EditProfileResponse.builder()
                 .userId(edit.getUserId())
