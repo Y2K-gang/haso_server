@@ -26,7 +26,7 @@ public class Product {
 
     private String title; // 상품 제목
 
-//    private String picture; // 상품 사진
+    private String picture; // 상품 사진
 
     private int quantity; // 상품 수량(kg)
 
@@ -50,7 +50,7 @@ public class Product {
         this.description = productRequest.getDescription();
         this.location = productRequest.getLocation();
         this.category = productRequest.getCategory();
-//        this.picture = productRequest.getPicture() != null ? productRequest.getPicture().getOriginalFilename() : null;
+        this.picture = productRequest.getPicture() != null ? productRequest.getPicture().getOriginalFilename() : null;
 
     }
 
