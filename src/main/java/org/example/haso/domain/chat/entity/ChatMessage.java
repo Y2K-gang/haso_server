@@ -18,15 +18,17 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private ChatRoom chatRoom; // 메시지가 속한 채팅방
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
+    private ChatRoom chatRoom;
+
 
     @ManyToOne
-    private MemberEntity sender; // 메시지를 보낸 사용자
+    private MemberEntity sender; // 메세지 보낸 이
 
     private String message; // 메시지 내용
 
-    private LocalDateTime sendTime; // 메시지가 보낸 시간
+    private LocalDateTime sendTime; // 메시지 보낸 시간
 
     public ChatMessage(ChatRoom chatRoom, MemberEntity sender, String message) {
         this.chatRoom = chatRoom;

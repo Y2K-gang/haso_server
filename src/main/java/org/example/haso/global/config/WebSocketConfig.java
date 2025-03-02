@@ -10,18 +10,23 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final WebSocketAuthInterceptor webSocketAuthInterceptor;
+
+    public WebSocketConfig(WebSocketAuthInterceptor webSocketAuthInterceptor) {
+        this.webSocketAuthInterceptor = webSocketAuthInterceptor;
+    }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // 메시지 브로커 설정
-        config.enableSimpleBroker("/topic"); // 메시지를 받을 곳
-        config.setApplicationDestinationPrefixes("/app"); // 클라이언트로부터의 메시지를 받을 경로
+        config.enableSimpleBroker("/topic");  // 메시지를 받을 목적지
+        config.setApplicationDestinationPrefixes("/app");  // 클라이언트가 보낼 목적지 (ex: /app/chat)
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // STOMP 엔드포인트 등록
-        registry.addEndpoint("/ws") // 클라이언트가 연결할 엔드포인트
-                .setAllowedOrigins("*") // CORS 설정
-                .withSockJS(); // SockJS 설정 (필요한 경우)
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("*")  // CORS 설정
+                .withSockJS()
+                .setInterceptors(webSocketAuthInterceptor);
     }
 }
