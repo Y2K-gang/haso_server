@@ -10,7 +10,7 @@ import lombok.*;
 public class OutChatMessageVO {
 
     private String id;
-    private String senderName;  // 보낸 사람의 이름
+    private String senderName;  // 보낸 이
     private String domain;  // 채팅방 이름
     private String content;  // 메시지 내용
 }
