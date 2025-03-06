@@ -20,6 +20,8 @@ public class GetProductResponse {
     private int price; // 상품 가격(kg)
     private String location; // 장소
     private Category category; // 상품 종류
+    private LocalDateTime createdDate; // 생성된 시간
+
 
 
     public static GetProductResponse from(Product product) {
@@ -31,6 +33,7 @@ public class GetProductResponse {
                 .price(product.getPrice())
                 .location(product.getLocation())
                 .category(product.getCategory())
+                .createdDate(product.getCreatedDate())
                 .build();
     }
 
