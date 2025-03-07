@@ -33,7 +33,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate").permitAll()
+                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate", "/member/send", "/member/validation/phone").permitAll()
                         .anyRequest().authenticated()  // 나머지 경로는 인증 필요
                 )
 

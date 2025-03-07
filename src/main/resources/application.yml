@@ -70,9 +70,8 @@ cloud:
         auto: false
 
 
-
-
-
-
-
-
+coolsms:
+  api:
+    key: ${COOLSMS_API_KEY}
+    secret: ${COOLSMS_API_SECRET}
+    number: ${COOLSMS_PHONE_NUMBER}
