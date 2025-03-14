@@ -15,9 +15,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
-import java.util.List;
-import java.util.Arrays;
 
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = "org.example.haso.global.auth")
@@ -32,51 +32,35 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ 중복 제거
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate", "/member/send", "/member/validation/phone").permitAll()
-                        .anyRequest().authenticated()  // 나머지 경로는 인증 필요
+                        .anyRequest().authenticated()
                 )
-
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
 
-
-//    // CORS 설정
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration corsConfig = new CorsConfiguration();
-//        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8345", "https://port-0-haso-server-m70dmespb703c228.sel4.cloudtype.app"));
-//        corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "OPTIONS"));
-//        corsConfig.setAllowedHeaders(Arrays.asList("*"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", corsConfig);
-//        return source;
-//    }
-
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*");
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
+//        configuration.addAllowedOriginPattern("*");
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8345", "http://34.64.56.232"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.addExposedHeader("Authorization");
+
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-
-
-    // PasswordEncoder 빈 등록
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // BCryptPasswordEncoder 빈으로 등록
+        return new BCryptPasswordEncoder();
     }
-
-
-
 }
