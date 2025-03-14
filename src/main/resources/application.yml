@@ -13,7 +13,7 @@ spring:
 
   security:
     cors:
-      allowed-origins: "*"
+      allowed-origins: "http://localhost:3000, http://34.64.56.232, http://localhost:8345"
       allowed-methods: "GET, POST, PUT, DELETE"
       allowed-headers: "*"
       exposed-headers: "Authorization"
