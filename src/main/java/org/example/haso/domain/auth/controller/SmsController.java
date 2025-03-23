@@ -19,10 +19,10 @@ public class SmsController {
     private final CoolSmsService coolSmsService;
 
     @PostMapping("/send")
-    public ResponseEntity<BaseResponse<String>> sendSms(@RequestBody Map<String, String> body) {
+    public ResponseEntity<BaseResponse<String>> sendSms(@RequestBody Map<String, String> body, HttpSession session) {
         String phoneNumber = body.get("phoneNumber");
         try {
-            String generatedCode = coolSmsService.sendSms(phoneNumber);
+            String generatedCode = coolSmsService.sendSms(phoneNumber, session);
             return ResponseEntity.ok(new BaseResponse<>(
                     HttpStatus.OK.value(),
                     "인증번호가 전송되었습니다.",

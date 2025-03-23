@@ -27,7 +27,7 @@ public class CoolSmsService {
 
     private static final int CODE_LENGTH = 4;
 
-    public String sendSms(String to) throws CoolsmsException {
+    public String sendSms(String to, HttpSession session) throws CoolsmsException {
         String verificationCode = generateRandomNumber();
         try {
             Message coolsms = new Message(apiKey, apiSecretKey);
@@ -39,6 +39,12 @@ public class CoolSmsService {
 
             coolsms.send(params);
             log.info("SMS 전송 성공: {} -> {}", fromPhoneNumber, to);
+
+            session.setAttribute("validation", verificationCode);
+
+            // 저장된 값 로그 확인
+            log.info("세션에 저장된 인증 코드: {}", session.getAttribute("validation"));
+
 
             return verificationCode;
         } catch (Exception e) {
@@ -59,6 +65,8 @@ public class CoolSmsService {
 
     public String validationSMS(String validation, HttpSession session) {
         String storedCode = (String) session.getAttribute("validation");
+
+        log.info("세션에서 가져온 인증 코드: {}", storedCode);
 
         if (storedCode == null) {
             return "인증번호 만료, 처음부터 다시 시도해주세요.";
