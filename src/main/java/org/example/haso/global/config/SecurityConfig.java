@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/member/**").permitAll()
+                        .requestMatchers("/member/signup", "/member/signin", "/member/refresh", "/member/validate", "/member/send", "/member/validation/phone").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

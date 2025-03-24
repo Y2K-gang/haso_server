@@ -30,7 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
 
-        if (request.getRequestURI().startsWith("/member/signin") || request.getRequestURI().startsWith("/member/signup")) {
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/member/signin") || uri.startsWith("/member/signup") ||
+                uri.startsWith("/member/refresh") || uri.startsWith("/member/validate") ||
+                uri.startsWith("/member/send") || uri.startsWith("/member/validation/phone")) {
             filterChain.doFilter(request, response);
             return;
         }
