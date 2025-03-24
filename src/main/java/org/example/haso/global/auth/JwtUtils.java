@@ -16,6 +16,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Component
 @RequiredArgsConstructor
@@ -23,6 +26,8 @@ public class JwtUtils {
 
     private final JwtProperties properties;
     private SecretKey secretKey;
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+
 
     @PostConstruct
     public void init() {
@@ -82,17 +87,24 @@ public class JwtUtils {
                     .getPayload();
 //            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException e) {
+            logger.error("Expired JWT: {}", e.getMessage());
             throw JwtException.EXPIRED.getException();
         } catch (SignatureException e) {
+            logger.error("Invalid JWT Signature: {}", e.getMessage());
             throw JwtException.SIGNATURE.getException();
         } catch (MalformedJwtException e) {
+            logger.error("Malformed JWT: {}", e.getMessage());
             throw JwtException.MALFORMED.getException();
         } catch (UnsupportedJwtException e) {
+            logger.error("Unsupported JWT: {}", e.getMessage());
             throw JwtException.UNSUPPORTED.getException();
         } catch (IllegalArgumentException e) {
+            logger.error("JWT Illegal Argument: {}", e.getMessage());
             throw JwtException.ILLEGAL_ARGUMENT.getException();
         } catch (Exception e) {
+            logger.error("Unexpected JWT error: {}", e.getMessage());
             throw GlobalException.SERVER_ERROR.getException();
         }
+
     }
 }

@@ -29,7 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if (request.getRequestURI().startsWith("/member/signup")) {
+
+        if (request.getRequestURI().startsWith("/member/signin") || request.getRequestURI().startsWith("/member/signup")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -38,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         logger.debug("JWT 필터 실행됨: 요청 URI = {}", request.getRequestURI());
         logger.debug("Authorization 헤더 = {}", token);
+
 
         if (token != null && !token.isBlank()) {
             try {
