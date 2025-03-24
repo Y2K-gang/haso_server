@@ -15,7 +15,7 @@ import org.example.haso.domain.profile.repository.EditRepository;
 import org.example.haso.domain.profile.repository.ProfileRepository;
 import org.example.haso.global.auth.JwtUtils;
 import org.example.haso.global.auth.TokenInfo;
-import org.example.haso.global.util.RedisUtil;
+//import org.example.haso.global.util.RedisUtil;
 import org.example.haso.global.util.SmsUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class MemberService {
     private final ProfileRepository profileRepository;
     private final JwtUtils utils;
     private final SmsUtil smsUtil;
-    private final RedisUtil redisUtil;
+//    private final RedisUtil redisUtil;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
