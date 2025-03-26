@@ -31,7 +31,8 @@ public class Edit {
 
     private String password; // 비밀번호
     private String name; // 본명
-    private String tel; // 전화번호
+//    private String tel; // 전화번호
+    private String phoneNumber;
     private String businessNo; // 사업자 등록 번호
     private String faxNo; // 팩스 번호
     private String storeNo; // 사업장 번호
@@ -48,7 +49,8 @@ public class Edit {
     public void edit(EditProfileRequest request) {
         this.password = request.getPassword() != null ? request.getPassword() : this.password;
         this.name = request.getName() != null ? request.getName() : this.name;
-        this.tel = request.getTel() != null ? request.getTel() : this.tel;
+//        this.tel = request.getTel() != null ? request.getTel() : this.tel;
+        this.phoneNumber = request.getPhoneNumber() != null ? request.getPhoneNumber() : this.phoneNumber;
         this.businessNo = request.getBusinessNo() != null ? request.getBusinessNo() : this.businessNo;
         this.faxNo = request.getFaxNo() != null ? request.getFaxNo() : this.faxNo;
         this.storeNo = request.getStoreNo() != null ? request.getStoreNo() : this.storeNo;

@@ -30,7 +30,8 @@ public class Statement {
     private String user; // userId -> 유저별 데이터 구별 위함
 
     private Date date; // 거래 일자 (YYYY-MM-DD)
-    private String tel; // 전화번호
+//    private String tel; // 전화번호
+    private String phoneNumber;
     private String faxNumber; // 팩스 번호
     private String businessNo; // 사업자 등록 번호
     private String tradeName; // 상호

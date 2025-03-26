@@ -18,7 +18,8 @@ public record SignupMemberRequest (
         String confirmPassword,
 
         @NotBlank(message = "tel는 공백일 수 없습니다")
-        String tel,
+        String phoneNumber,
+//        String tel,
 
         @NotBlank(message = "storeName는 공백일 수 없습니다")
         String storeName,
