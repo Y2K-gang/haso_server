@@ -29,7 +29,8 @@ public class MemberEntity {
     String password; // 비밀번호
 
     @Column(nullable = false)
-    String tel; // 전화번호
+//    String tel; // 전화번호
+    String phoneNumber;
 
     @Column(nullable = false)
     String storeName; // 상호명

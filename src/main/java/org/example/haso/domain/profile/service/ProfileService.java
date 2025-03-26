@@ -57,7 +57,8 @@ public class ProfileService {
 
         member.setPassword(encodedPassword);
         member.setName(request.getName());
-        member.setTel(request.getTel());
+//        member.setTel(request.getTel());
+        member.setPhoneNumber(request.getPhoneNumber());
         member.setBusinessNo(request.getBusinessNo());
         member.setFaxNo(request.getFaxNo());
         member.setStoreNo(request.getStoreNo());
@@ -69,7 +70,8 @@ public class ProfileService {
                 .userId(edit.getUserId())
                 .password(edit.getPassword())
                 .name(edit.getName())
-                .tel(edit.getTel())
+//                .tel(edit.getTel())
+                .phoneNumber(edit.getPhoneNumber())
                 .businessNo(edit.getBusinessNo())
                 .faxNo(edit.getFaxNo())
                 .storeNo(edit.getStoreNo())
