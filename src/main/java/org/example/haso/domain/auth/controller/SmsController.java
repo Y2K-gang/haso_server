@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.example.haso.domain.auth.dto.SmsRequest;
 import org.example.haso.domain.auth.service.CoolSmsService;
 import org.example.haso.global.BaseResponse;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,12 @@ public class SmsController {
     private final CoolSmsService coolSmsService;
 
     @PostMapping("/send")
-    public ResponseEntity<BaseResponse<String>> sendSms(@RequestBody String phoneNumber, HttpSession session) {
+    public ResponseEntity<BaseResponse<String>> sendSms(@RequestBody SmsRequest request, HttpSession session) {
 //        String phoneNumber = body.get("phoneNumber");
-        log.info("Sending SMS to(controller): {}", phoneNumber);
+        log.info("Sending SMS to(controller): {}", request);
 
         try {
-            String generatedCode = coolSmsService.sendSms(phoneNumber, session);
+            String generatedCode = coolSmsService.sendSms(request.phoneNumber(), session);
             return ResponseEntity.ok(new BaseResponse<>(
                     HttpStatus.OK.value(),
                     "인증번호가 전송되었습니다.",
