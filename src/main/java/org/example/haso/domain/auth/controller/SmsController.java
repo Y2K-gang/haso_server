@@ -2,15 +2,18 @@ package org.example.haso.domain.auth.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.example.haso.domain.auth.service.CoolSmsService;
 import org.example.haso.global.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -21,6 +24,8 @@ public class SmsController {
     @PostMapping("/send")
     public ResponseEntity<BaseResponse<String>> sendSms(@RequestBody Map<String, String> body, HttpSession session) {
         String phoneNumber = body.get("phoneNumber");
+        log.info("Sending SMS to(controller): {}", phoneNumber);
+
         try {
             String generatedCode = coolSmsService.sendSms(phoneNumber, session);
             return ResponseEntity.ok(new BaseResponse<>(

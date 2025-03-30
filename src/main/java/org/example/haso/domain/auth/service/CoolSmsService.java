@@ -27,18 +27,19 @@ public class CoolSmsService {
 
     private static final int CODE_LENGTH = 4;
 
-    public String sendSms(String to, HttpSession session) throws CoolsmsException {
+    public String sendSms(String phoneNumber, HttpSession session) throws CoolsmsException {
         String verificationCode = generateRandomNumber();
+        log.info("Sending SMS to: {}", phoneNumber);
         try {
             Message coolsms = new Message(apiKey, apiSecretKey);
             HashMap<String, String> params = new HashMap<>();
-            params.put("to", to);
+            params.put("to", phoneNumber);
             params.put("from", fromPhoneNumber);
             params.put("type", "sms");
             params.put("text", "인증번호는 [" + verificationCode + "] 입니다.");
 
             coolsms.send(params);
-            log.info("SMS 전송 성공: {} -> {}", fromPhoneNumber, to);
+            log.info("SMS 전송 성공: {} -> {}", fromPhoneNumber, phoneNumber);
 
             session.setAttribute("validation", verificationCode);
 
