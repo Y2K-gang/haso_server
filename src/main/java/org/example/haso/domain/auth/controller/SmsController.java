@@ -22,8 +22,8 @@ public class SmsController {
     private final CoolSmsService coolSmsService;
 
     @PostMapping("/send")
-    public ResponseEntity<BaseResponse<String>> sendSms(@RequestBody Map<String, String> body, HttpSession session) {
-        String phoneNumber = body.get("phoneNumber");
+    public ResponseEntity<BaseResponse<String>> sendSms(@RequestBody String phoneNumber, HttpSession session) {
+//        String phoneNumber = body.get("phoneNumber");
         log.info("Sending SMS to(controller): {}", phoneNumber);
 
         try {
