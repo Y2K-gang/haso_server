@@ -29,7 +29,7 @@ public class CoolSmsService {
 
     public String sendSms(String phoneNumber, HttpSession session) throws CoolsmsException {
         String verificationCode = generateRandomNumber();
-        log.info("Sending SMS to: {}", phoneNumber);
+//        String to = phoneNumber;
         try {
             Message coolsms = new Message(apiKey, apiSecretKey);
             HashMap<String, String> params = new HashMap<>();
