@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.example.haso.domain.auth.MemberException;
+import org.example.haso.domain.auth.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +45,7 @@ public class CoolSmsService {
 
             session.setAttribute("validation", verificationCode);
 
-            // 저장된 값 로그 확인
             log.info("세션에 저장된 인증 코드: {}", session.getAttribute("validation"));
-
 
             return verificationCode;
         } catch (Exception e) {
@@ -70,12 +70,13 @@ public class CoolSmsService {
         log.info("세션에서 가져온 인증 코드: {}", storedCode);
 
         if (storedCode == null) {
-            return "인증번호 만료, 처음부터 다시 시도해주세요.";
+            throw MemberException.EXPIRED_NUMBER.getException();
+
         } else if (storedCode.equals(validation)) {
             session.removeAttribute("validation"); // 인증 성공 후 삭제
             return "인증 완료";
         } else {
-            return "인증 실패";
+            throw MemberException.NOT_MATCH.getException();
         }
     }
 }
